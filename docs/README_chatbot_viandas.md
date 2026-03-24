@@ -253,7 +253,7 @@ Es normal no tener todavía reglas de descuentos automáticos. A medida que el v
 ## ⚙️ Configuración Meta WhatsApp
 
 ```
-URL Webhook: https://TU-DOMINIO.com/webhook/whatsapp-viandas
+URL Webhook: https://n8n-prod-lucas.duckdns.org/webhook/whatsapp-viandas
 Evento a suscribir: messages
 ```
 Testing local: `ngrok http 5678` para exponer localhost.

@@ -1,7 +1,7 @@
 // Chat UI — APA Viandas
 // Conecta con el webhook de n8n y maneja la burbuja flotante
 
-const WEBHOOK_URL = 'http://localhost:5678/webhook/whatsapp-viandas';
+const WEBHOOK_URL = 'https://n8n-prod-lucas.duckdns.org/webhook/whatsapp-viandas';
 
 const sessionId = 'web-' + Math.random().toString(36).slice(2, 10);
 

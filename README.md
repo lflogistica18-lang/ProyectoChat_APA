@@ -98,3 +98,11 @@ ProyectoChat_APA/
 *Agencia IA — Arquitecto Senior + Especialista en Datos + Experto en n8n*
 *ProyectoChat_APA — Marzo 2026*
 
+---
+
+### 🌐 Webhooks de Producción (Configurados en n8n-prod-lucas.duckdns.org)
+- **Lead Form:** `https://n8n-prod-lucas.duckdns.org/webhook/lead-web`
+- **Chat Widget:** `https://n8n-prod-lucas.duckdns.org/webhook/whatsapp-viandas`
+- **Generador Historias:** `https://n8n-prod-lucas.duckdns.org/webhook/generar-historias`
+
+

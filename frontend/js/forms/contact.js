@@ -43,7 +43,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             // URL MOCK DE N8N LOCAL (Webhooks Test de n8n)
             // Cuando cambies a producción el usuario deberá cambiar esta URL por la de su servidor real.
-            const WEBHOOK_URL = 'http://localhost:5678/webhook-test/lead-web';
+            const WEBHOOK_URL = 'https://n8n-prod-lucas.duckdns.org/webhook/lead-web';
             
             const response = await fetch(WEBHOOK_URL, {
                 method: 'POST',

@@ -80,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             // Reemplazar con la URL de webhook de pruebas/producción de tu n8n
-            const WEBHOOK_URL = 'http://localhost:5678/webhook-test/generar-historias';
+            const WEBHOOK_URL = 'https://n8n-prod-lucas.duckdns.org/webhook/generar-historias';
             
             const response = await fetch(WEBHOOK_URL, {
                 method: 'POST',
