@@ -1,0 +1,174 @@
+{
+  "name": "APA Flujo Formulario Web",
+  "nodes": [
+    {
+      "id": "1",
+      "name": "🌐 Webhook Formulario",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [200, 300],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "lead-web"
+      }
+    },
+    {
+      "id": "2",
+      "name": "📊 Guardar en Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [400, 300],
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Leads Web",
+          "mode": "name"
+        }
+      }
+    },
+    {
+      "id": "3",
+      "name": "🔀 Derivador B2B/B2C",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [640, 300],
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "operation": "equal",
+              "value1": "={{ $('🌐 Webhook Formulario').item.json.body.tipo_cliente }}",
+              "value2": "Empresa"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "4",
+      "name": "📧 Mail Interno B2B",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [860, 200],
+      "parameters": {
+        "sendTo": "lf.logistica.18@gmail.com",
+        "subject": "={{ '🚨 NUEVO LEAD B2B - ' + $('🌐 Webhook Formulario').item.json.body.nombre }}",
+        "message": "={{ '¡Atención! Nuevo lead corporativo.<br><br><b>Nombre:</b> ' + $('🌐 Webhook Formulario').item.json.body.nombre + '<br><b>Teléfono:</b> ' + $('🌐 Webhook Formulario').item.json.body.telefono + '<br><b>Email:</b> ' + $('🌐 Webhook Formulario').item.json.body.email + '<br><b>Empleados:</b> ' + $('🌐 Webhook Formulario').item.json.body.cantidad_empleados + '<br><br><b>Mensaje:</b> ' + $('🌐 Webhook Formulario').item.json.body.mensaje }}",
+        "appendAttribution": false
+      }
+    },
+    {
+      "id": "5",
+      "name": "📧 Mail Interno B2C",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [860, 400],
+      "parameters": {
+        "sendTo": "lf.logistica.18@gmail.com",
+        "subject": "={{ '📩 Nuevo lead B2C - ' + $('🌐 Webhook Formulario').item.json.body.nombre }}",
+        "message": "={{ 'Nuevo lead particular.<br><br><b>Nombre:</b> ' + $('🌐 Webhook Formulario').item.json.body.nombre + '<br><b>Teléfono:</b> ' + $('🌐 Webhook Formulario').item.json.body.telefono + '<br><b>Email:</b> ' + $('🌐 Webhook Formulario').item.json.body.email + '<br><b>Viandas aprox:</b> ' + $('🌐 Webhook Formulario').item.json.body.cantidad_viandas + '<br><br><b>Mensaje:</b> ' + $('🌐 Webhook Formulario').item.json.body.mensaje }}",
+        "appendAttribution": false
+      }
+    },
+    {
+      "id": "6",
+      "name": "📩 Email al Cliente",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [640, 500],
+      "parameters": {
+        "sendTo": "={{ $('🌐 Webhook Formulario').item.json.body.email }}",
+        "subject": "¡Recibimos tu consulta! - Gastro Viandas",
+        "message": "={{ 'Hola <b>' + $('🌐 Webhook Formulario').item.json.body.nombre + '</b>, ¡gracias por escribirnos!<br><br>Hemos recibido tu solicitud correctamente. Un asesor comercial revisará tu pedido y se pondrá en contacto contigo muy pronto al número que nos dejaste (' + $('🌐 Webhook Formulario').item.json.body.telefono + ').<br><br>¡Saludos!<br>Equipo de APA Soluciones Gastronómicas' }}",
+        "appendAttribution": false
+      }
+    },
+    {
+      "id": "7",
+      "name": "📌 Recepción Automática",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [150, 100],
+      "parameters": {
+        "color": 3,
+        "content": "## 🌐 Captación Web y Ruteo\nEste flujo recibe el webhook del formulario, lo guarda de backup en Google Sheets, clasifica entre tipo de cliente (Particular/Empresa), y finalmente emite alertas tanto internas (ventas) como un email automático directo hacia el cliente.",
+        "height": 550,
+        "width": 1000
+      }
+    },
+    {
+      "id": "error-note-form",
+      "name": "📌 Manejo de Errores",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [200, 700],
+      "parameters": {
+        "color": 2,
+        "content": "## 🚨 Captura de Errores\nEste trigger se activa automáticamente cuando un nodo falla en el flujo.",
+        "height": 250,
+        "width": 400
+      }
+    },
+    {
+      "id": "error-trigger-form",
+      "name": "🚨 Catch Errores",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [250, 750],
+      "parameters": {}
+    }
+  ],
+  "connections": {
+    "🌐 Webhook Formulario": {
+      "main": [
+        [
+          {
+            "node": "📊 Guardar en Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "📊 Guardar en Sheets": {
+      "main": [
+        [
+          {
+            "node": "🔀 Derivador B2B/B2C",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "📩 Email al Cliente",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🔀 Derivador B2B/B2C": {
+      "main": [
+        [
+          {
+            "node": "📧 Mail Interno B2B",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "📧 Mail Interno B2C",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

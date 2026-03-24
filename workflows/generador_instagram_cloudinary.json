@@ -1,0 +1,325 @@
+{
+  "name": "Publicador Inteligente Instagram (Gemini + Cloudinary)",
+  "nodes": [
+    {
+      "id": "trigger-form",
+      "name": "📝 Formulario de Subida",
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2,
+      "position": [0, 200],
+      "parameters": {
+        "formTitle": "Publicador de Instagram",
+        "formDescription": "Sube tu foto cruda y redactaremos el diseño y texto",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Sube la imagen de la vianda",
+              "fieldType": "file",
+              "requiredField": true,
+              "acceptFileTypes": "image/*"
+            },
+            {
+              "fieldLabel": "Breve idea a transmitir",
+              "fieldType": "textarea",
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Estilo Visual",
+              "fieldType": "dropdown",
+              "requiredField": true,
+              "fieldOptions": {
+                "values": [
+                  { "option": "PROMO (Sticker Descuento)" },
+                  { "option": "PRECIO_FLOTANTE (Burbuja Blanca)" },
+                  { "option": "MINIMAL (Solo Logo)" }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "gemini-model",
+      "name": "🧠 Gemini Pro Vision",
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [200, 400],
+      "parameters": {
+        "modelId": {
+          "__rl": true, 
+          "value": "models/gemini-1.5-pro-latest",
+          "mode": "list"
+        }
+      }
+    },
+    {
+      "id": "llm-chain",
+      "name": "🧠 Redactor Creativo",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1,
+      "position": [250, 200],
+      "parameters": {
+        "promptType": "define",
+        "text": "Analiza la imagen adjunta y la siguiente idea del cliente: '{{ $('📝 Formulario de Subida').item.json.idea }}'.\n\nDevuelve UNICAMENTE un objeto JSON válido con estas dos claves:\n1. \"caption\": El post completo para Instagram con hashtags y emojis.\n2. \"latiguillo_grafico\": Un texto muuuuy cortito (máx 3-4 palabras) perfecto para estampar en letras gigantes sobre la foto. Ejemplo: '¡PROMO FINDE!' o '$4500 INCREÍBLE'.",
+        "hasOutputParser": false
+      }
+    },
+    {
+      "id": "code-cloudinary",
+      "name": "☁️ Generador Cloudinary URL",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [550, 200],
+      "parameters": {
+        "jsCode": "const estilo = $('📝 Formulario de Subida').item.json.estiloVisual || 'MINIMAL (Solo Logo)';\nconst json_generado = JSON.parse($input.item.json.text);\nconst latiguillo = json_generado.latiguillo_grafico || 'NUEVA VIANDA';\nconst texto_limpio = encodeURIComponent(latiguillo);\n\n// Estilos de Cloudinary (ejemplos adaptables a tus assets subidos allí)\nconst styles = {\n  'PROMO (Sticker Descuento)': `l_badge_red,g_south_west,w_200/l_text:Inter_Bold_50:${texto_limpio},co_white,g_south_west,y_20`,\n  'PRECIO_FLOTANTE (Burbuja Blanca)': `b_rgb:ffffff,o_80,h_120,w_400,g_south/l_text:Inter_Medium_40:${texto_limpio},g_south,y_20`,\n  'MINIMAL (Solo Logo)': `l_logo_tuempresa,g_north_east,w_150,o_80`\n};\n\nlet transformacion = styles[estilo] || styles['MINIMAL (Solo Logo)'];\n\n// NOTA: 'tu_usuario' se reemplaza por tu cloud name real de Cloudinary.\n// Subir dinámicamente o usar ID de asset renderizado:\nlet url_final = `https://res.cloudinary.com/tu_usuario/image/upload/${transformacion}/v1/foto_cruda.jpg`;\n\nreturn {\n  json: {\n    url_cloudinary: url_final,\n    caption: json_generado.caption\n  }\n};\n"
+      }
+    },
+    {
+      "id": "http-cloudinary",
+      "name": "🖼️ Renderizar y Descargar",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [800, 200],
+      "parameters": {
+        "url": "={{ $json.url_cloudinary }}",
+        "responseFormat": "file"
+      }
+    },
+    {
+      "id": "telegram-approval",
+      "name": "Aprobación Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1050, 200],
+      "parameters": {
+        "chatId": "TU_CHAT_ID",
+        "text": "=⏳ Previsualización de Publicación en Instagram:\n\n💬 **Caption:**\n{{ $('☁️ Generador Cloudinary URL').item.json.caption }}\n\n🖼️ **Imagen:** {{ $('☁️ Generador Cloudinary URL').item.json.url_cloudinary }}\n\n👇 Haz clic en el enlace adjunto para aprobar y publicar:",
+        "replyMarkup": "inlineKeyboard",
+        "inlineKeyboard": {
+          "rows": [
+            {
+              "row": {
+                "buttons": [
+                  {
+                    "text": "✅ APROBAR PUBLICACIÓN",
+                    "url": "={{ $execution.resumeUrl }}"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "wait-approval",
+      "name": "Esperar Aprobación",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [1250, 200],
+      "webhookId": "w-wait-approval-id",
+      "parameters": {
+        "resume": "webhook",
+        "options": {}
+      }
+    },
+    {
+      "id": "push-ig",
+      "name": "📱 Publicar en Instagram",
+      "type": "n8n-nodes-base.facebookGraphApi",
+      "typeVersion": 1,
+      "position": [1450, 200],
+      "parameters": {
+        "edge": "media_publish",
+        "node": "tu_instagram_business_id",
+        "httpRequestMethod": "POST",
+        "options": {
+          "queryParameters": {
+            "parameter": [
+              {
+                "name": "image_url",
+                "value": "={{ $('☁️ Generador Cloudinary URL').item.json.url_cloudinary }}"
+              },
+              {
+                "name": "caption",
+                "value": "={{ $('☁️ Generador Cloudinary URL').item.json.caption }}"
+              }
+            ]
+          }
+        }
+      }
+    },
+    {
+      "id": "error-trigger",
+      "name": "🚨 Catch Errores",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [100, 750],
+      "parameters": {}
+    },
+    {
+      "id": "error-noop",
+      "name": "Terminar Error",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [350, 750],
+      "parameters": {}
+    },
+    {
+      "id": "sticky-1",
+      "name": "📌 1. Recolección",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [-50, 50],
+      "parameters": {
+        "color": 3,
+        "content": "## Sube la imagen y la idea\nA través del formulario web",
+        "height": 450,
+        "width": 250
+      }
+    },
+    {
+      "id": "sticky-2",
+      "name": "📌 2. Gemini IA",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [220, 50],
+      "parameters": {
+        "color": 6,
+        "content": "## Análisis y Copywriting\nAcá se le envía la imagen y la directiva a Google Gemini Pro.",
+        "height": 450,
+        "width": 250
+      }
+    },
+    {
+      "id": "sticky-4",
+      "name": "📌 3. Cloudinary Render",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [520, 50],
+      "parameters": {
+        "color": 5,
+        "content": "## Aplicar Plantillas Gráficas\nGeneramos la URL paramétrica y descargamos el resultado.",
+        "height": 450,
+        "width": 450
+      }
+    },
+    {
+      "id": "sticky-hitl",
+      "name": "📌 4. Validación",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [1020, 50],
+      "parameters": {
+        "color": 4,
+        "content": "## Aprobación Humana (Telegram)\nRevisamos y damos OK antes de publicar",
+        "height": 450,
+        "width": 400
+      }
+    },
+    {
+      "id": "sticky-error",
+      "name": "📌 Manejo de Errores",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [50, 700],
+      "parameters": {
+        "color": 2,
+        "content": "## 🚨 Registro de Fallos Globales",
+        "height": 200,
+        "width": 400
+      }
+    }
+  ],
+  "connections": {
+    "📝 Formulario de Subida": {
+      "main": [
+        [
+          {
+            "node": "🧠 Redactor Creativo",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🧠 Gemini Pro Vision": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "🧠 Redactor Creativo",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🧠 Redactor Creativo": {
+      "main": [
+        [
+          {
+            "node": "☁️ Generador Cloudinary URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "☁️ Generador Cloudinary URL": {
+      "main": [
+        [
+          {
+            "node": "🖼️ Renderizar y Descargar",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🖼️ Renderizar y Descargar": {
+      "main": [
+        [
+          {
+            "node": "Aprobación Telegram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aprobación Telegram": {
+      "main": [
+        [
+          {
+            "node": "Esperar Aprobación",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Esperar Aprobación": {
+      "main": [
+        [
+          {
+            "node": "📱 Publicar en Instagram",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🚨 Catch Errores": {
+      "main": [
+        [
+          {
+            "node": "Terminar Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

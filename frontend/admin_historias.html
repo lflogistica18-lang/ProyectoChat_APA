@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Historias con IA | APA Viandas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap');
+        body { font-family: 'Outfit', sans-serif; background-color: #f8fafc; }
+        .glass-card { background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body class="text-slate-800 min-h-screen items-center justify-center p-4 md:p-8 flex">
+
+    <div class="glass-card max-w-2xl w-full mx-auto rounded-3xl shadow-xl overflow-hidden border border-slate-100">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-orange-600 to-rose-600 p-8 text-white relative overflow-hidden">
+            <div class="absolute -right-10 -top-10 text-white/10 text-9xl">
+                <i class="fa-solid fa-wand-magic-sparkles"></i>
+            </div>
+            <h1 class="text-3xl font-bold mb-2 relative z-10">Generador Mágico de Historias</h1>
+            <p class="text-orange-100 relative z-10">Sube tus fotos, escribe la promo y deja que la IA haga el resto.</p>
+        </div>
+
+        <!-- Form Content -->
+        <div class="p-8">
+            <form id="story-generator-form" class="space-y-6">
+                
+                <!-- Tema / Promo -->
+                <div>
+                    <label for="promocion" class="block text-sm font-semibold text-slate-700 mb-2">
+                        <i class="fa-solid fa-tag text-orange-500 mr-2"></i>Promoción o Menú Destacado
+                    </label>
+                    <input type="text" id="promocion" name="promocion" placeholder="Ej: Promo 2x1 en viandas saludables toda la semana" required
+                        class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none bg-slate-50">
+                </div>
+
+                <!-- Contexto -->
+                <div>
+                    <label for="contexto" class="block text-sm font-semibold text-slate-700 mb-2">
+                        <i class="fa-solid fa-bullseye text-orange-500 mr-2"></i>Público Objetivo o Contexto
+                    </label>
+                    <input type="text" id="contexto" name="contexto" placeholder="Ej: Oficinistas sin tiempo para cocinar, que quieren bajar de peso" required
+                        class="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all outline-none bg-slate-50">
+                </div>
+
+                <!-- Fotos -->
+                <div>
+                    <label class="block text-sm font-semibold text-slate-700 mb-2">
+                        <i class="fa-solid fa-camera text-orange-500 mr-2"></i>Fotos de tus viandas (Máx 3)
+                    </label>
+                    
+                    <div class="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-slate-300 border-dashed rounded-xl hover:bg-slate-50 transition-colors cursor-pointer" id="drop-zone" onclick="document.getElementById('fotos_viandas').click()">
+                        <div class="space-y-1 text-center">
+                            <i class="fa-solid fa-cloud-arrow-up text-4xl text-slate-400 mb-3"></i>
+                            <div class="flex text-sm text-slate-600 justify-center">
+                                <label for="fotos_viandas" class="relative cursor-pointer bg-white rounded-md font-medium text-orange-600 hover:text-orange-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-orange-500">
+                                    <span>Sube fotos reales o tómalas ahora</span>
+                                    <!-- Permite abrir la cámara en el celular si elegimos el input -->
+                                    <input id="fotos_viandas" name="fotos_viandas" type="file" class="sr-only" accept="image/jpeg, image/png, image/webp" multiple>
+                                </label>
+                            </div>
+                            <p class="text-xs text-slate-500 mt-2">PNG o JPG hasta 5MB. Puedes sacar foto directo del celular.</p>
+                        </div>
+                    </div>
+                    <!-- Vista previa de las fotos seleccionadas -->
+                    <div id="preview-container" class="mt-4 grid grid-cols-3 gap-4 hidden"></div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" id="submit-btn" class="w-full bg-slate-900 hover:bg-slate-800 text-white font-semibold py-4 px-6 rounded-xl shadow-lg hover:shadow-xl transition-all flex items-center justify-center group">
+                    <span id="btn-text">Generar con Inteligencia Artificial</span>
+                    <i id="btn-icon" class="fa-solid fa-wand-magic-sparkles ml-2 group-hover:rotate-12 transition-transform"></i>
+                    <!-- Spinner Oculto -->
+                    <svg id="btn-spinner" class="animate-spin ml-2 h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            </form>
+
+            <!-- Success Message Container -->
+            <div id="success-msg" class="hidden mt-6 bg-green-50 border border-green-200 text-green-800 rounded-xl p-6 text-center">
+                <div class="text-green-500 text-5xl mb-4"><i class="fa-brands fa-telegram"></i></div>
+                <h3 class="text-xl font-bold mb-2">¡Datos enviados a n8n!</h3>
+                <p>La inteligencia artificial está trabajando en los copys y fondos. Recibirás todo el material terminado directamente en tu Telegram en unos minutos.</p>
+                <button onclick="location.reload()" class="mt-4 text-sm underline text-green-700 font-semibold">Crear más historias</button>
+            </div>
+            
+            <!-- Error Message Container -->
+            <div id="error-msg" class="hidden mt-6 bg-red-50 border border-red-200 text-red-800 rounded-xl p-4 text-center text-sm font-semibold">
+                Hubo un error al conectar con n8n. Revisa la consola o asegúrate que el Webhook esté activo.
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Script de lógica conectada al webhook -->
+    <script src="js/stories/stories_form.js"></script>
+</body>
+</html>

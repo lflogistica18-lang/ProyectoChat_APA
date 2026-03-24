@@ -1,0 +1,199 @@
+{
+  "name": "Generador de Historias IA (Gemini + Cloudinary)",
+  "nodes": [
+    {
+      "id": "1",
+      "name": "🌐 Webhook Formulario",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [
+        0,
+        300
+      ],
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "generar-historias"
+      }
+    },
+    {
+      "id": "2",
+      "name": "🧠 Gemini (Textos)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        250,
+        300
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "parameters": {
+        "method": "POST",
+        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "key",
+              "value": "AIzaSyDfK_8wRRz6XjVHXF1MJCqiBstD2QSFQ2Q"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ {\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"Eres un experto en marketing gastronómico. Genera 3 copys para Instagram basados en esto:\\nPromo: \" + $('🌐 Webhook Formulario').first().json.body.promocion + \"\\nContexto: \" + $('🌐 Webhook Formulario').first().json.body.contexto + \"\\n\\nDevuelve UNICAMENTE un texto simple (nada de Markdown ni ```) que contenga un JSON válido como un Array de 3 objetos. Cada objeto debe tener estas claves exactas: 'hook', 'cuerpo', 'boton', y 'prompt_imagen_fondo' (en inglés, muy descriptivo de un fondo estético moderno sin texto ni personas).\"\n        }\n      ]\n    }\n  ]\n} }}",
+        "options": {}
+      }
+    },
+    {
+      "id": "3",
+      "name": "🖼️ Pollinations (Fondo IA)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        500,
+        300
+      ],
+      "retryOnFail": true,
+      "maxTries": 5,
+      "waitBetweenTries": 5000,
+      "parameters": {
+        "url": "={{ 'https://image.pollinations.ai/prompt/' + encodeURIComponent((JSON.parse($json.candidates[0].content.parts[0].text)[0].prompt_imagen_fondo) || (JSON.parse($json.candidates[0].content.parts[0].text)[0]['prompt imagen fondo']) || 'fondo_generico') + '?width=1080&height=1920&nologo=true' }}",
+        "responseFormat": "file",
+        "options": {}
+      }
+    },
+    {
+      "id": "4",
+      "name": "☁️ Cloudinary (Fusión)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [
+        750,
+        300
+      ],
+      "retryOnFail": true,
+      "maxTries": 3,
+      "waitBetweenTries": 3000,
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.cloudinary.com/v1_1/dxbgy8i8o/image/upload",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "upload_preset",
+              "value": "Historias-APA"
+            },
+            {
+              "name": "file",
+              "value": "={{ $binary.data }}"
+            }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "5",
+      "name": "🤖 Telegram (Resultado)",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [
+        1000,
+        300
+      ],
+      "parameters": {
+        "resource": "message",
+        "operation": "sendMessage",
+        "chatId": "7788365997",
+        "text": "={{ '¡Historia lista para descargar!\\n\\nHOOK: ' + JSON.parse($('🧠 Gemini (Textos)').item.json.candidates[0].content.parts[0].text)[0].hook + '\\nCUERPO: ' + JSON.parse($('🧠 Gemini (Textos)').item.json.candidates[0].content.parts[0].text)[0].cuerpo }}",
+        "additionalFields": {}
+      }
+    },
+    {
+      "id": "6",
+      "name": "📌 Instrucciones de Configuración",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -50,
+        50
+      ],
+      "parameters": {
+        "content": "## 🚀 Generador Asistido de Historias IA\nEste flujo requiere que configures 3 credenciales manuales para funcionar:\n1. **Gemini**: Entra al nodo `🧠 Gemini`, baja hasta 'Query Parameters' y reemplaza `AQUI_PONER_TU_API_KEY_DE_GEMINI` por tu key.\n2. **Cloudinary**: Entra a `☁️ Cloudinary`, reemplaza `AQUI_TU_CLOUD_NAME` en la URL y `AQUI_TU_UPLOAD_PRESET` en los parámetros.\n3. **Telegram**: Ingresa al nodo, crea una Credencial de Telegram Bot Api y pega tu Chat ID en el campo correspondiente.\n\n*(Nota: Este flujo base genera y envía la Historia Nº 1 para verificar que todo funciona, luego podrás duplicar los nodos para las historias 2 y 3).* geometric",
+        "height": 600,
+        "width": 1300,
+        "color": 6
+      }
+    },
+    {
+      "id": "error-note-stories",
+      "name": "📌 Manejo de Errores",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [200, 700],
+      "parameters": {
+        "color": 2,
+        "content": "## 🚨 Captura de Errores\nEste trigger se activa automáticamente cuando un nodo falla en el flujo.",
+        "height": 250,
+        "width": 400
+      }
+    },
+    {
+      "id": "error-trigger-stories",
+      "name": "🚨 Catch Errores",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [250, 750],
+      "parameters": {}
+    }
+  ],
+  "connections": {
+    "🌐 Webhook Formulario": {
+      "main": [
+        [
+          {
+            "node": "🧠 Gemini (Textos)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🧠 Gemini (Textos)": {
+      "main": [
+        [
+          {
+            "node": "🖼️ Pollinations (Fondo IA)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🖼️ Pollinations (Fondo IA)": {
+      "main": [
+        [
+          {
+            "node": "☁️ Cloudinary (Fusión)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "☁️ Cloudinary (Fusión)": {
+      "main": [
+        [
+          {
+            "node": "🤖 Telegram (Resultado)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

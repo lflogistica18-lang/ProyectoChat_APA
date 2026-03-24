@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \":*)",
+      "Read(///wsl.localhost/Ubuntu/home/lucas/PROYECTOS/ProyectoChat_APA/**)"
+    ]
+  }
+}

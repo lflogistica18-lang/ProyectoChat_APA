@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface-container-high": "#eae7e7",
+              "secondary-container": "#e5e2dd",
+              "surface-dim": "#dcd9d9",
+              "on-surface-variant": "#5a4139",
+              "surface-variant": "#e5e2e1",
+              "tertiary": "#2a674c",
+              "on-tertiary-fixed": "#002114",
+              "tertiary-fixed-dim": "#95d4b3",
+              "on-error-container": "#93000a",
+              "primary-fixed-dim": "#ffb59c",
+              "tertiary-fixed": "#b1f0ce",
+              "secondary-fixed": "#e5e2dd",
+              "on-surface": "#1c1b1b",
+              "primary-fixed": "#ffdbd0",
+              "surface-container-highest": "#e5e2e1",
+              "on-secondary-fixed": "#1c1c19",
+              "secondary": "#5f5e5b",
+              "error-container": "#ffdad6",
+              "on-background": "#1c1b1b",
+              "error": "#ba1a1a",
+              "on-tertiary-fixed-variant": "#0e5138",
+              "inverse-surface": "#313030",
+              "outline": "#8e7167",
+              "primary-container": "#cf4609",
+              "on-tertiary-container": "#f5fff7",
+              "background": "#fcf9f8",
+              "on-primary-fixed-variant": "#832700",
+              "surface-tint": "#ab3500",
+              "inverse-on-surface": "#f3f0ef",
+              "surface-container-lowest": "#ffffff",
+              "on-error": "#ffffff",
+              "surface-container": "#f0eded",
+              "surface-container-low": "#f6f3f2",
+              "inverse-primary": "#ffb59c",
+              "secondary-fixed-dim": "#c8c6c2",
+              "on-primary": "#ffffff",
+              "on-secondary-container": "#656461",
+              "primary": "#a73400",
+              "tertiary-container": "#448064",
+              "surface-bright": "#fcf9f8",
+              "on-secondary": "#ffffff",
+              "on-secondary-fixed-variant": "#474743",
+              "on-primary-container": "#fffbff",
+              "on-tertiary": "#ffffff",
+              "on-primary-fixed": "#390c00",
+              "surface": "#fcf9f8",
+              "outline-variant": "#e2bfb4"
+            },
+            fontFamily: {
+              "headline": ["Inter"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glass-nav {
+            background-color: rgba(252, 249, 248, 0.8);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 glass-nav shadow-[0_12px_32px_rgba(26,26,26,0.04)]">
+<div class="max-w-7xl mx-auto px-8 py-4 flex justify-between items-center">
+<div class="text-xl font-black text-on-surface tracking-tight">APA Soluciones Gastronómicas</div>
+<div class="hidden md:flex items-center space-x-8">
+<a class="text-on-secondary-fixed-variant hover:text-primary transition-all duration-300 font-['Inter'] tracking-tight font-medium text-sm" href="#">Inicio</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-['Inter'] tracking-tight text-sm" href="#">Menú</a>
+<a class="text-on-secondary-fixed-variant hover:text-primary transition-all duration-300 font-['Inter'] tracking-tight font-medium text-sm" href="#">Cómo funciona</a>
+<a class="text-on-secondary-fixed-variant hover:text-primary transition-all duration-300 font-['Inter'] tracking-tight font-medium text-sm" href="#">Empresas</a>
+</div>
+<button class="bg-primary hover:opacity-80 transition-all duration-300 text-on-primary px-6 py-2.5 rounded-lg font-medium text-sm active:scale-95 transition-transform">
+                Pedir por WhatsApp
+            </button>
+</div>
+</nav>
+<!-- Header Section -->
+<header class="pt-32 pb-16 bg-surface-container-low">
+<div class="max-w-7xl mx-auto px-8">
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<span class="text-primary font-bold tracking-widest text-xs uppercase mb-2 block">CATÁLOGO SEMANAL</span>
+<h1 class="text-4xl md:text-5xl font-black tracking-tight text-on-surface mb-4">Nuestras Viandas</h1>
+<p class="text-on-surface-variant text-lg max-w-2xl">Platos equilibrados, cocinados en el día y listos para disfrutar. Elige tus favoritos de esta semana.</p>
+</div>
+<div class="flex items-center gap-2 bg-surface-container-lowest px-4 py-2 rounded-full shadow-sm">
+<span class="material-symbols-outlined text-primary text-sm">schedule</span>
+<span class="text-on-secondary-fixed-variant text-xs font-medium">Actualizado: Semana del 20 de Mayo</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Category Filter Bar (Sticky) -->
+<div class="sticky top-[72px] z-40 bg-surface-container-lowest border-b border-outline-variant/10 shadow-sm">
+<div class="max-w-7xl mx-auto px-8 py-4 overflow-x-auto">
+<div class="flex items-center gap-3 whitespace-nowrap">
+<button class="px-5 py-2 rounded-full bg-primary text-on-primary text-sm font-bold flex items-center gap-2 shadow-md">
+                    Todas <span class="bg-on-primary/20 px-2 py-0.5 rounded-full text-[10px]">24</span>
+</button>
+<button class="px-5 py-2 rounded-full bg-surface-container text-on-secondary-fixed-variant text-sm font-medium hover:bg-surface-variant transition-colors flex items-center gap-2">
+                    Clásicas <span class="bg-on-secondary-fixed-variant/10 px-2 py-0.5 rounded-full text-[10px]">12</span>
+</button>
+<button class="px-5 py-2 rounded-full bg-surface-container text-on-secondary-fixed-variant text-sm font-medium hover:bg-surface-variant transition-colors flex items-center gap-2">
+                    Fit <span class="bg-on-secondary-fixed-variant/10 px-2 py-0.5 rounded-full text-[10px]">8</span>
+</button>
+<button class="px-5 py-2 rounded-full bg-surface-container text-on-secondary-fixed-variant text-sm font-medium hover:bg-surface-variant transition-colors flex items-center gap-2">
+                    Vegetarianas <span class="bg-on-secondary-fixed-variant/10 px-2 py-0.5 rounded-full text-[10px]">4</span>
+</button>
+<button class="px-5 py-2 rounded-full bg-surface-container text-on-secondary-fixed-variant text-sm font-medium hover:bg-surface-variant transition-colors flex items-center gap-2">
+                    Sin TACC <span class="bg-on-secondary-fixed-variant/10 px-2 py-0.5 rounded-full text-[10px]">2</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Grid -->
+<main class="max-w-7xl mx-auto px-8 py-16">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+<!-- Product Card 1 -->
+<article class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_12px_32px_rgba(26,26,26,0.04)] group transition-transform hover:-translate-y-1">
+<div class="relative h-64 overflow-hidden">
+<img alt="Ensalada Gourmet" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Plato de ensalada fresca con salmón y aguacate" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-cComBSLfsBwjQUp93WX4TNL8Nd4Z2CDJxZXGY27YBEMgLpfIxw3ztn_Nulux_m5XxL0QITv5T2TbwoOcIs01EaKJLko1J_uSlL9HeVHk-cLnRFiJLdhHMTMX1hKvwoD0AlOeBl2Dts_vRXwA4SLiOQFttj0epPzGiSnQ3mni66WAZBU5fIYSjaXWI-qa9ZHkB-rZqxp5nHL9IFeR8F7C_aO1UTEJc0bAEC4HcyLItmv8ZhAJgTyzY6Ds_ROaKXcF0gEwigkUSg3K"/>
+<div class="absolute top-4 left-4 flex flex-col gap-2">
+<span class="bg-tertiary text-on-tertiary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">FIT</span>
+<span class="bg-primary-container text-on-primary-container text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-[12px]" style="font-variation-settings: 'FILL' 1;">star</span> Popular
+                        </span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-bold text-on-surface leading-tight">Salmón Teriyaki con Quinoa</h3>
+<span class="text-primary font-black text-xl">$5.800</span>
+</div>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-4">Salmón rosado marinado en salsa artesanal, acompañado de mix de quinoa orgánica y vegetales al wok.</p>
+<!-- Macros Strip -->
+<div class="flex items-center justify-between border-y border-outline-variant/10 py-3 mb-4">
+<div class="text-center">
+<p class="text-[10px] text-on-secondary-fixed-variant uppercase font-bold tracking-tighter">Kcal</p>
+<p class="text-sm font-black text-on-surface">450</p>
+</div>
+<div class="text-center">
+<p class="text-[10px] text-on-secondary-fixed-variant uppercase font-bold tracking-tighter">Prot</p>
+<p class="text-sm font-black text-on-surface">32g</p>
+</div>
+<div class="text-center">
+<p class="text-[10px] text-on-secondary-fixed-variant uppercase font-bold tracking-tighter">Carb</p>
+<p class="text-sm font-black text-on-surface">28g</p>
+</div>
+<div class="text-center">
+<p class="text-[10px] text-on-secondary-fixed-variant uppercase font-bold tracking-tighter">Grasas</p>
+<p class="text-sm font-black text-on-surface">12g</p>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-surface-container px-2 py-1 rounded text-[10px] font-medium text-on-secondary-fixed-variant">#Omega3</span>
+<span class="bg-surface-container px-2 py-1 rounded text-[10px] font-medium text-on-secondary-fixed-variant">#Proteico</span>
+</div>
+<button class="w-full bg-[#25D366] hover:opacity-90 text-white py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all active:scale-95">
+<span class="material-symbols-outlined text-lg">chat</span>
+                        Pedir por WhatsApp
+                    </button>
+</div>
+</article>
+<!-- Product Card 2 -->
+<article class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_12px_32px_rgba(26,26,26,0.04)] group transition-transform hover:-translate-y-1">
+<div class="relative h-64 overflow-hidden">
+<img alt="Pasta Italiana" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Pasta casera con salsa de tomate y albahaca fresca" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByLTv7fOSqHJEE7kntRGXag7YCkg-FH1xCq8JGcpF8I4YTkLfv5bHUZJsrkv-DtKLf42NN_wPkDumoF1dEHEC3V7WMHgu8FmuaAzz1daPanr-wECvS7_88cEQGle0LQnby8TLu45pB6TrNCgVmnjDtvbI9L0WLHO_KiWhBs_cCYnWCYpKXV7B0Ozkjq4naCQ1ait7bSn6tQv8BJm9Rd8M2eDc8BYWd64llkja_eR5pXUkQ9giVGDWzBuDSMxbgXmi0bpLvaDwHV56b"/>
+<div class="absolute top-4 left-4 flex flex-col gap-2">
+<span class="bg-on-surface-variant text-on-primary text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">CLÁSICAS</span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-bold text-on-surface leading-tight">Lasagna de la Nonna</h3>
+<span class="text-primary font-black text-xl">$4.200</span>
+</div>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-4">Capas de pasta casera, bolognesa de ternera cocida por 6 horas y una suave salsa bechamel.</p>
+<!-- Macros Strip -->
+<div class="flex items-center justify-between border-y border-outline-variant/10 py-3 mb-4">
+<div class="text-center">
+<p class="text-[10px] text-on-secondary-fixed-variant uppercase font-bold tracking-tighter">Kcal</p>
+<p class="text-sm font-black text-on-surface">620</p>
+</div>
+<div class="text-center">
+<p class="text-[10px] text-on-secondary-fixed-variant uppercase font-bold tracking-tighter">Prot</p>
+<p class="text-sm font-black text-on-surface">24g</p>
+</div>
+<div class="text-center">
+<p class="text-[10px] text-on-secondary-fixed-variant uppercase font-bold tracking-tighter">Carb</p>
+<p class="text-sm font-black text-on-surface">58g</p>
+</div>
+<div class="text-center">
+<p class="text-[10px] text-on-secondary-fixed-variant uppercase font-bold tracking-tighter">Grasas</p>
+<p class="text-sm font-black text-on-surface">22g</p>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-surface-container px-2 py-1 rounded text-[10px] font-medium text-on-secondary-fixed-variant">#Artesanal</span>
+<span class="bg-surface-container px-2 py-1 rounded text-[10px] font-medium text-on-secondary-fixed-variant">#ConfortFood</span>
+</div>
+<button class="w-full bg-[#25D366] hover:opacity-90 text-white py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all active:scale-95">
+<span class="material-symbols-outlined text-lg">chat</span>
+                        Pedir por WhatsApp
+                    </button>
+</div>
+</article>
+<!-- Product Card 3 -->
+<article class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_12px_32px_rgba(26,26,26,0.04)] group transition-transform hover:-translate-y-1">
+<div class="relative h-64 overflow-hidden">
+<img alt="Bowl Vegetariano" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Buddha bowl con garbanzos, aguacate y kale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvgycmCivSAMnggH-j85X3Tb-z5NgkpA2RM5jnVeiXPu98BYNqPByTY5wpureuPCWBdJqPMusKk_YId9b0rhpDdxFEpuXPw6h0d3qGenw-m4lpvtOTZuTY7ub-n_gIgadISmcSdkE_AyhieSaUeh4aglDBz78nWNqzNW7M66IwXKgA0H670ol0j89gbhTSJbLfjX4XCm_xbUvWqiiiiqdIvxRkiHW-CPilkR_qjBfk-pYOEpyviQfo2K39rA8P7tmYlLYa6jMlr-B-"/>
+<div class="absolute top-4 left-4 flex flex-col gap-2">
+<span class="bg-tertiary-container text-on-tertiary-container text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">VEGETARIANAS</span>
+</div>
+</div>
+<div class="p-6">
+<div class="flex justify-between items-start mb-2">
+<h3 class="text-xl font-bold text-on-surface leading-tight">Buddha Bowl Proteico</h3>
+<span class="text-primary font-black text-xl">$3.900</span>
+</div>
+<p class="text-on-surface-variant text-sm line-clamp-2 mb-4">Garbanzos crocantes, falafel horneado, hummus de remolacha y verdes de estación.</p>
+<!-- Macros Strip -->
+<div class="flex items-center justify-between border-y border-outline-variant/10 py-3 mb-4">
+<div class="text-center">
+<p class="text-[10px] text-on-secondary-fixed-variant uppercase font-bold tracking-tighter">Kcal</p>
+<p class="text-sm font-black text-on-surface">380</p>
+</div>
+<div class="text-center">
+<p class="text-[10px] text-on-secondary-fixed-variant uppercase font-bold tracking-tighter">Prot</p>
+<p class="text-sm font-black text-on-surface">18g</p>
+</div>
+<div class="text-center">
+<p class="text-[10px] text-on-secondary-fixed-variant uppercase font-bold tracking-tighter">Carb</p>
+<p class="text-sm font-black text-on-surface">42g</p>
+</div>
+<div class="text-center">
+<p class="text-[10px] text-on-secondary-fixed-variant uppercase font-bold tracking-tighter">Grasas</p>
+<p class="text-sm font-black text-on-surface">14g</p>
+</div>
+</div>
+<div class="flex flex-wrap gap-2 mb-6">
+<span class="bg-surface-container px-2 py-1 rounded text-[10px] font-medium text-on-secondary-fixed-variant">#PlantBased</span>
+<span class="bg-surface-container px-2 py-1 rounded text-[10px] font-medium text-on-secondary-fixed-variant">#Fibra</span>
+</div>
+<button class="w-full bg-[#25D366] hover:opacity-90 text-white py-3 rounded-lg font-bold flex items-center justify-center gap-2 transition-all active:scale-95">
+<span class="material-symbols-outlined text-lg">chat</span>
+                        Pedir por WhatsApp
+                    </button>
+</div>
+</article>
+</div>
+</main>
+<!-- Weekly Package Banner -->
+<section class="max-w-7xl mx-auto px-8 pb-24">
+<div class="bg-[#2D6A4F] rounded-2xl overflow-hidden flex flex-col md:flex-row items-center">
+<div class="flex-1 p-8 md:p-16 text-white text-center md:text-left">
+<span class="text-tertiary-fixed font-bold tracking-widest text-xs uppercase mb-4 block">PLANIFICACIÓN INTELIGENTE</span>
+<h2 class="text-3xl md:text-5xl font-black mb-4 leading-tight">Ahorrá tiempo y dinero con el Pack Semanal</h2>
+<p class="text-on-tertiary-container/80 text-lg mb-8 max-w-md">10 viandas a elección por un precio promocional. La solución perfecta para tu oficina o casa.</p>
+<div class="flex flex-col md:flex-row items-center gap-6">
+<div class="flex flex-col items-center md:items-start">
+<span class="text-xs opacity-70">Desde solo</span>
+<span class="text-3xl font-black">$38.000</span>
+</div>
+<button class="bg-white text-[#2D6A4F] px-8 py-4 rounded-lg font-bold hover:bg-tertiary-fixed transition-colors shadow-lg active:scale-95">
+                        Consultar pack semanal
+                    </button>
+</div>
+</div>
+<div class="w-full md:w-1/3 h-64 md:h-full relative overflow-hidden">
+<img alt="Pack de Viandas" class="w-full h-full object-cover" data-alt="Conjunto de recipientes de comida preparada listos para la semana" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA0FifsIcXzGvC5b4zBLFLZeAtivG7YzimfThZoiEndnJWyDmNEhm25SQSHpvzJrpuVEF08xPrv9ud8WOd9cS1OWAxH7lTz7LsWLMfjqgHcqtEa0tQx73rXi-LvlQyYeYkxxGhe8ZK5nX-RZkbTJNtRdPBZJgv8f9DSSrTNXR1d7iWA5-CHK2m8xEpTc_yA3axzyThXH920pVynu5bCasBPUHxVrwfeZQ6ierEDbv1jEnYCoIbJk8BdYJdAKEIWDjsAeFYUAjqSshmE"/>
+<div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-l from-[#2D6A4F] to-transparent"></div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-surface-container-low w-full py-12 px-8">
+<div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
+<div class="flex flex-col gap-4">
+<div class="text-lg font-bold text-on-surface">APA Soluciones Gastronómicas</div>
+<p class="font-['Inter'] text-sm text-on-surface-variant">Nutrición consciente para personas reales. Cocinamos lo que nos gustaría comer en casa.</p>
+</div>
+<div>
+<h4 class="font-bold text-on-surface mb-4">Secciones</h4>
+<div class="flex flex-col gap-2 font-['Inter'] text-sm text-on-surface-variant">
+<a class="hover:underline hover:text-primary transition-all" href="#">Preguntas Frecuentes</a>
+<a class="hover:underline hover:text-primary transition-all" href="#">Términos y Condiciones</a>
+</div>
+</div>
+<div>
+<h4 class="font-bold text-on-surface mb-4">Contacto</h4>
+<div class="flex flex-col gap-2 font-['Inter'] text-sm text-on-surface-variant">
+<a class="hover:underline hover:text-primary transition-all" href="#">Instagram</a>
+<a class="hover:underline hover:text-primary transition-all" href="#">WhatsApp Business</a>
+<a class="hover:underline hover:text-primary transition-all" href="#">Contacto</a>
+</div>
+</div>
+<div class="flex flex-col justify-between">
+<div>
+<h4 class="font-bold text-on-surface mb-4">Ubicación</h4>
+<p class="font-['Inter'] text-sm text-on-surface-variant">Palermo Soho, Buenos Aires</p>
+</div>
+<div class="mt-8 font-['Inter'] text-xs text-on-surface-variant opacity-60">
+                    © 2026 APA Soluciones Gastronómicas. Hecho con amor en Argentina.
+                </div>
+</div>
+</div>
+</footer>
+<!-- Global Floating WhatsApp -->
+<a class="fixed bottom-8 right-8 z-[60] bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:scale-110 transition-transform flex items-center justify-center" href="https://wa.me/yournumber">
+<svg class="w-8 h-8" fill="currentColor" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"></path>
+</svg>
+</a>
+</body></html>

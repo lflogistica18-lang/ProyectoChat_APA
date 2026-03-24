@@ -1,0 +1,694 @@
+{
+  "updatedAt": "2026-03-18T13:51:03.665Z",
+  "createdAt": "2026-03-10T00:57:47.068Z",
+  "id": "Gfj08YyjUXpGdBB8",
+  "name": "🍱 Chatbot Ventas — Viandas & Insumos Gastronómicos",
+  "description": null,
+  "active": false,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## 🍱 Chatbot Ventas — Viandas & Insumos (B2B + B2C)\n\n**Credenciales a configurar:**\n1. ✅ Nodo **GPT-4o-mini** → credencial OpenAI API\n2. ✅ Nodo **Memoria** → sin credenciales (usa memoria interna n8n)\n3. ✅ Nodo **Guardar Lead Sheets** → credencial Google Sheets OAuth2 + reemplazar SHEET_ID\n4. ✅ Nodo **Email Vendedor** y **Email Cliente** → credencial Gmail OAuth2 + cambiar email destino\n5. ✅ Nodo **Telegram** → credencial Telegram Bot + cambiar CHAT_ID\n6. ✅ Nodo **Enviar WA** → reemplazar PHONE_NUMBER_ID y WHATSAPP_TOKEN\n7. ✅ Configurar Webhook en Meta: **POST** `https://TU-N8N.com/webhook/whatsapp-viandas`",
+        "height": 292,
+        "width": 750,
+        "color": 3
+      },
+      "id": "sticky-instrucciones",
+      "name": "📌 INSTRUCCIONES",
+      "position": [
+        0,
+        -320
+      ],
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "content": "## 🔄 Flujo Principal\n**B2B** (Negocios): restaurant, bar, hotel, catering, etc.\n**B2C** (Particulares): personas que piden viandas para su hogar\n\n1️⃣ WhatsApp → Webhook → Extraer mensaje\n2️⃣ AI Agent detecta tipo cliente y convresa naturalmente\n3️⃣ Al completar datos → Sheets + Email + Telegram\n4️⃣ Email de confirmación al cliente (si dio email)",
+        "height": 292,
+        "width": 600,
+        "color": 4
+      },
+      "id": "sticky-flujo",
+      "name": "📌 FLUJO",
+      "position": [
+        816,
+        -320
+      ],
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-viandas",
+        "options": {}
+      },
+      "id": "webhook-post",
+      "name": "📱 WhatsApp Entrada",
+      "position": [
+        0,
+        80
+      ],
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "webhookId": "7adb26f0-99b7-4c3c-9b2a-43e0e5746d81"
+    },
+    {
+      "parameters": {
+        "path": "whatsapp-viandas",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-get",
+      "name": "🔐 Verificación Meta GET",
+      "position": [
+        -16,
+        288
+      ],
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "webhookId": "ba8a6e1c-9192-456d-ae9a-99c39e047273"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "respond-verify",
+      "name": "✅ Devolver Challenge",
+      "position": [
+        224,
+        400
+      ],
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body;\n\ntry {\n  const entry = body.entry?.[0];\n  const change = entry?.changes?.[0];\n  const value = change?.value;\n  const message = value?.messages?.[0];\n  const contact = value?.contacts?.[0];\n\n  if (!message || message.type !== 'text') {\n    return [{ json: { valid: false, reason: 'no_text_message' } }];\n  }\n\n  return [{\n    json: {\n      valid: true,\n      phone: message.from,\n      message_text: message.text.body,\n      message_id: message.id,\n      contact_name: contact?.profile?.name || 'Cliente',\n      timestamp: new Date().toISOString()\n    }\n  }];\n} catch(e) {\n  return [{ json: { valid: false, reason: 'parse_error', error: e.message } }];\n}"
+      },
+      "id": "extract-msg",
+      "name": "📤 Extraer Datos WA",
+      "position": [
+        240,
+        80
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "cond-msg-valid-new",
+              "leftValue": "={{ $('🔄 Normalizar Entrada').item.json.message_text ? true : false }}",
+              "operator": {
+                "operation": "equals",
+                "type": "boolean"
+              },
+              "rightValue": true
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 1
+          }
+        },
+        "options": {}
+      },
+      "id": "check-valid",
+      "name": "🔍 ¿Mensaje Válido?",
+      "position": [
+        512,
+        80
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('🔄 Normalizar Entrada').item.json.message_text }}",
+        "options": {
+          "systemMessage": "Sos 'Gastro', el asistente virtual de ventas de una empresa argentina que vende:\n- 🍱 VIANDAS: para locales gastronómicos (B2B) Y para personas particulares (B2C)\n- 🥄 INSUMOS: para locales gastronómicos (B2B)\n\nSiempre en español argentino, cálido y profesional. Usá emojis con moderación.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n🎯 PASO 1 — DETECTAR TIPO DE CLIENTE\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nEn tu primera respuesta siempre saludá y preguntá si es:\n- Un negocio/local gastronómico (B2B)\n- Una persona particular (B2C)\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📋 DATOS A RECOPILAR — NEGOCIO (B2B)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n1. Nombre del contacto\n2. Nombre y tipo de negocio\n3. Zona/localidad de entrega\n4. Qué necesita: VIANDAS / INSUMOS / AMBOS\n5. Volumen aproximado\n6. Frecuencia: diaria, semanal, mensual\n7. Email para cotización formal\n8. Horario preferido para que un asesor llame\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n📋 DATOS A RECOPILAR — PARTICULAR (B2C)\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n1. Nombre y apellido\n2. Barrio o zona de entrega\n3. Para cuántas personas son las viandas\n4. Preferencias alimentarias o 'ninguna'\n5. Frecuencia deseada\n6. Forma de pago preferida\n7. Email o teléfono para coordinar (opcional)\n8. Horario preferido de entrega\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n⚠️ REGLAS IMPORTANTES\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n- NUNCA inventes precios.\n- Recopilá los datos de forma CONVERSACIONAL.\n- Podés preguntar 1-2 datos por mensaje.\n- Si el cliente solo quiere info general, respondé brevemente.\n\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n✅ CUANDO TENGAS TODOS LOS DATOS\n━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\nAl final de tu respuesta incluí este bloque JSON (entre triple backticks) SIN excepción:\n\n```json\n{\n  \"lead_completo\": true,\n  \"tipo_cliente\": \"NEGOCIO o PARTICULAR\",\n  \"nombre\": \"nombre del contacto\",\n  \"nombre_negocio\": \"nombre del local o empresa (solo B2B, sino N/A)\",\n  \"tipo_local\": \"restaurant/bar/hotel/catering/empresa/escuela/etc (B2B) o PARTICULAR\",\n  \"zona\": \"zona o barrio de entrega\",\n  \"productos\": \"VIANDAS / INSUMOS / AMBOS\",\n  \"volumen\": \"cantidad estimada o personas\",\n  \"frecuencia\": \"diaria/semanal/mensual\",\n  \"preferencias\": \"preferencias alimentarias o Ninguna\",\n  \"forma_pago\": \"forma de pago preferida o A coordinar\",\n  \"email\": \"email o No proporcionó\",\n  \"horario_contacto\": \"horario o entrega preferida\",\n  \"intencion\": \"COMPRA / CONSULTA / INFO / SOPORTE\"\n}\n```"
+        }
+      },
+      "id": "ai-agent",
+      "name": "🧠 AI Sales Agent",
+      "position": [
+        688,
+        64
+      ],
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1
+    },
+    {
+      "parameters": {
+        "sessionKey": "={{ $('🔄 Normalizar Entrada').item.json.phone || $json.sessionId || \"test-user\" }}"
+      },
+      "id": "memory",
+      "name": "🧠 Memoria por Teléfono",
+      "position": [
+        784,
+        304
+      ],
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://graph.facebook.com/v19.0/PHONE_NUMBER_ID/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Bearer WHATSAPP_TOKEN"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"messaging_product\": \"whatsapp\",\n  \"recipient_type\": \"individual\",\n  \"to\": \"{{ $('🔄 Normalizar Entrada').item.json.phone }}\",\n  \"type\": \"text\",\n  \"text\": {\n    \"preview_url\": false,\n    \"body\": \"{{ $json.output.replace(/```json[\\\\s\\\\S]*?```/g, '').trim() }}\"\n  }\n}",
+        "options": {}
+      },
+      "id": "send-whatsapp",
+      "name": "📱 Enviar Respuesta WA",
+      "position": [
+        1168,
+        48
+      ],
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4
+    },
+    {
+      "parameters": {
+        "jsCode": "const agentOutput = $('🧠 AI Sales Agent').item.json.output || '';\nconst userInput = $('🔄 Normalizar Entrada').item.json;\n\n// Extraer bloque JSON de la respuesta del agente\nconst jsonMatch = agentOutput.match(/```json\\s*([\\s\\S]*?)```/);\n\nif (jsonMatch && jsonMatch[1]) {\n  try {\n    const leadData = JSON.parse(jsonMatch[1].trim());\n    if (leadData.lead_completo === true) {\n      return [{\n        json: {\n          ...leadData,\n          telefono_wa: userInput.phone,\n          nombre_contacto_wa: userInput.contact_name,\n          timestamp: new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' }),\n          es_lead_completo: true\n        }\n      }];\n    }\n  } catch(e) {\n    // JSON inválido, no es lead completo\n  }\n}\n\nreturn [{\n  json: {\n    es_lead_completo: false,\n    telefono_wa: userInput.phone\n  }\n}];"
+      },
+      "id": "parse-lead",
+      "name": "🎯 Parsear Lead",
+      "position": [
+        1344,
+        64
+      ],
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "cond-lead-completo",
+              "leftValue": "={{ $json.es_lead_completo }}",
+              "operator": {
+                "operation": "equals",
+                "type": "boolean"
+              },
+              "rightValue": true
+            }
+          ],
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          }
+        },
+        "options": {}
+      },
+      "id": "if-lead",
+      "name": "✅ ¿Lead Completo?",
+      "position": [
+        1520,
+        64
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "id": "save-sheets",
+      "name": "📊 Guardar en Google Sheets",
+      "position": [
+        1840,
+        48
+      ],
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7
+    },
+    {
+      "parameters": {
+        "sendTo": "vendedor@tuempresa.com",
+        "subject": "={{ $json.tipo_cliente === 'NEGOCIO' ? '🔴' : '🟡' }} LEAD {{ $json.tipo_cliente }} — {{ $json.nombre_negocio !== 'N/A' ? $json.nombre_negocio : $json.nombre }} | {{ $json.intencion }}",
+        "message": "=<div style=\"font-family: Arial, sans-serif; max-width: 620px;\"><div style=\"background: {{ $json.tipo_cliente === 'NEGOCIO' ? '#e53935' : '#fb8c00' }}; padding: 20px; border-radius: 8px 8px 0 0;\"><h2 style=\"color:white; margin:0;\">{{ $json.tipo_cliente === 'NEGOCIO' ? '🔴 LEAD NEGOCIO' : '🟡 LEAD PARTICULAR' }} — Nuevo</h2></div><div style=\"background:#fff; padding:24px; border:1px solid #e0e0e0;\"><table style=\"width:100%; border-collapse:collapse;\"><tr><td style=\"padding:8px; font-weight:bold; width:40%;\"> Nombre</td><td style=\"padding:8px;\">{{ $json.nombre }}</td></tr><tr style=\"background:#f9f9f9\"><td style=\"padding:8px; font-weight:bold;\"> Teléfono/WA</td><td style=\"padding:8px;\">{{ $json.telefono_wa }}</td></tr><tr style=\"background:#f9f9f9\"><td style=\"padding:8px; font-weight:bold;\"> Zona</td><td style=\"padding:8px;\">{{ $json.zona }}</td></tr><tr><td style=\"padding:8px; font-weight:bold;\"> Productos</td><td style=\"padding:8px;\">{{ $json.productos }}</td></tr></table></div></div>",
+        "options": {}
+      },
+      "id": "email-vendedor",
+      "name": "📧 Email Alerta Vendedor",
+      "position": [
+        2112,
+        -336
+      ],
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "webhookId": "8512b3aa-6002-483f-b440-b82f0cf19b67"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "cond-email",
+              "leftValue": "={{ $json.email }}",
+              "operator": {
+                "operation": "notEquals",
+                "type": "string"
+              },
+              "rightValue": "No proporcionó"
+            }
+          ],
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          }
+        },
+        "options": {}
+      },
+      "id": "check-email",
+      "name": "📧 ¿Tiene Email?",
+      "position": [
+        2112,
+        48
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "=✅ Recibimos tu consulta, {{ $json.nombre }}! — Viandas & Insumos",
+        "message": "=<div style=\"font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;\"><div style=\"background: linear-gradient(135deg, #2196F3, #4CAF50); padding: 28px; text-align: center; border-radius: 10px 10px 0 0;\"><h1 style=\"color: white; margin: 0; font-size: 26px;\">🍱 Viandas & Insumos</h1></div><div style=\"background: #ffffff; padding: 28px; border: 1px solid #e0e0e0;\"><h2 style=\"color: #333;\">Hola {{ $json.nombre }}!</h2><p style=\"color: #555;\">Gracias por contactarnos. Un asesor se comunicará con vos a la brevedad.</p></div></div>",
+        "options": {}
+      },
+      "id": "email-cliente",
+      "name": "📧 Email Confirmación Cliente",
+      "position": [
+        2400,
+        32
+      ],
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "webhookId": "5a9fb8ae-44d8-4389-9fec-85425aeb58ca"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "2f13523f-ef44-471c-81dd-1018e2ae178d",
+      "name": "Google Gemini Chat Model",
+      "position": [
+        672,
+        304
+      ],
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "credentials": {
+        "googlePalmApi": {
+          "id": "zmLvD5motYs1dWCs",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "id": "chat-trigger-test",
+      "name": "💬 Chat de Prueba",
+      "position": [
+        -208,
+        288
+      ],
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "webhookId": "e8328a2d-c026-4f22-b611-79fddb026ce4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e0ade186-b413-400d-9a99-968b9f4b1638",
+              "name": "phone",
+              "type": "string",
+              "value": "={{ $node[\"📤 Extraer Datos WA\"] ? $node[\"📤 Extraer Datos WA\"].json.phone : \"chat-user\" }}"
+            },
+            {
+              "id": "8d99903a-3453-41c6-9477-802c3ef70995",
+              "name": "message_text",
+              "type": "string",
+              "value": "={{ $node[\"📤 Extraer Datos WA\"] ? $node[\"📤 Extraer Datos WA\"].json.message_text : $json.chatInput }}"
+            },
+            {
+              "id": "b3a9923a-3453-41c6-9477-802c3ef70996",
+              "name": "contact_name",
+              "type": "string",
+              "value": "={{ $node[\"📤 Extraer Datos WA\"] ? $node[\"📤 Extraer Datos WA\"].json.contact_name : \"Usuario n8n\" }}"
+            },
+            {
+              "id": "c4a9923a-3453-41c6-9477-802c3ef70997",
+              "name": "trigger_type",
+              "type": "string",
+              "value": "={{ $node[\"📤 Extraer Datos WA\"] ? \"whatsapp\" : \"chat\" }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "normalize-input",
+      "name": "🔄 Normalizar Entrada",
+      "position": [
+        384,
+        288
+      ],
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4
+    },
+    {
+      "parameters": {
+        "content": "### 🧪 Módulo de Pruebas\nPermite probar el bot directamente desde el lienzo de n8n sin depender de WhatsApp.\n\n**Instrucciones:**\n1. Abrí el nodo \"💬 Chat de Prueba\"\n2. Escribí un mensaje\n3. Observá el flujo en tiempo real",
+        "height": 300,
+        "width": 400,
+        "color": 5
+      },
+      "id": "sticky-test-new",
+      "name": "📌 PRUEBAS INTERNAS",
+      "position": [
+        -480,
+        -64
+      ],
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "combinator": "and",
+          "conditions": [
+            {
+              "id": "cond-is-wa-check",
+              "leftValue": "={{ $('🔄 Normalizar Entrada').item.json.trigger_type }}",
+              "operator": {
+                "operation": "equals",
+                "type": "string"
+              },
+              "rightValue": "whatsapp"
+            }
+          ],
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          }
+        },
+        "options": {}
+      },
+      "id": "is-whatsapp-gate-new",
+      "name": "❓ ¿Es WhatsApp?",
+      "position": [
+        960,
+        64
+      ],
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3
+    },
+    {
+      "id": "error-note-chat",
+      "name": "📌 Manejo de Errores",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [200, 700],
+      "parameters": {
+        "color": 2,
+        "content": "## 🚨 Captura de Errores\nEste trigger se activa automáticamente cuando un nodo falla en el flujo.",
+        "height": 250,
+        "width": 400
+      }
+    },
+    {
+      "id": "error-trigger-chat",
+      "name": "🚨 Catch Errores",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [250, 750],
+      "parameters": {}
+    }
+  ],
+  "connections": {
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "index": 0,
+            "node": "🧠 AI Sales Agent",
+            "type": "ai_languageModel"
+          }
+        ]
+      ]
+    },
+    "✅ ¿Lead Completo?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "📊 Guardar en Google Sheets",
+            "type": "main"
+          }
+        ],
+        []
+      ]
+    },
+    "❓ ¿Es WhatsApp?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "📱 Enviar Respuesta WA",
+            "type": "main"
+          }
+        ],
+        [
+          {
+            "index": 0,
+            "node": "🎯 Parsear Lead",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "🎯 Parsear Lead": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "✅ ¿Lead Completo?",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "💬 Chat de Prueba": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "🔄 Normalizar Entrada",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "📊 Guardar en Google Sheets": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "📧 Email Alerta Vendedor",
+            "type": "main"
+          },
+          {
+            "index": 0,
+            "node": "📧 ¿Tiene Email?",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "📤 Extraer Datos WA": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "🔄 Normalizar Entrada",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "📧 ¿Tiene Email?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "📧 Email Confirmación Cliente",
+            "type": "main"
+          }
+        ],
+        []
+      ]
+    },
+    "📱 Enviar Respuesta WA": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "🎯 Parsear Lead",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "📱 WhatsApp Entrada": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "📤 Extraer Datos WA",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "🔄 Normalizar Entrada": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "🔍 ¿Mensaje Válido?",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "🔍 ¿Mensaje Válido?": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "🧠 AI Sales Agent",
+            "type": "main"
+          }
+        ],
+        []
+      ]
+    },
+    "🔐 Verificación Meta GET": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "✅ Devolver Challenge",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "🧠 AI Sales Agent": {
+      "main": [
+        [
+          {
+            "index": 0,
+            "node": "❓ ¿Es WhatsApp?",
+            "type": "main"
+          }
+        ]
+      ]
+    },
+    "🧠 Memoria por Teléfono": {
+      "ai_memory": [
+        [
+          {
+            "index": 0,
+            "node": "🧠 AI Sales Agent",
+            "type": "ai_memory"
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Argentina/Buenos_Aires",
+    "saveDataErrorExecution": "all",
+    "saveDataSuccessExecution": "all",
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": null,
+  "pinData": {},
+  "versionId": "df10bbb1-3688-4105-bc1b-8a21f1ba6979",
+  "activeVersionId": null,
+  "versionCounter": 55,
+  "triggerCount": 0,
+  "shared": [
+    {
+      "updatedAt": "2026-03-10T00:57:47.076Z",
+      "createdAt": "2026-03-10T00:57:47.076Z",
+      "role": "workflow:owner",
+      "workflowId": "Gfj08YyjUXpGdBB8",
+      "projectId": "DA8QURx7yQL8D7bi",
+      "project": {
+        "updatedAt": "2026-03-18T13:07:28.476Z",
+        "createdAt": "2026-03-03T23:09:57.007Z",
+        "id": "DA8QURx7yQL8D7bi",
+        "name": "Lucas Fernandez <lf.logistica.18@gmail.com.ar>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "creatorId": "33f096f6-2d89-4ae1-a0a0-dc0c24f34e0a"
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": null
+}
