@@ -84,7 +84,7 @@
         }
     </style>
 </head>
-<body class="bg-background text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed">
+<body class="bg-background text-on-surface font-body selection:bg-primary-fixed selection:text-on-primary-fixed" x-data="landingData()" x-init="initData()">
 <!-- TopNavBar -->
 <header class="fixed top-0 w-full z-50 glass-header shadow-[0_12px_32px_rgba(26,26,26,0.04)]">
 <nav class="max-w-7xl mx-auto px-6 md:px-8 py-4 flex justify-between items-center">
@@ -110,12 +110,12 @@
 <div class="flex-1 space-y-8">
 <div class="inline-flex items-center gap-2 px-3 py-1 bg-tertiary-fixed text-on-tertiary-fixed-variant rounded-full text-xs font-bold tracking-wider uppercase">
 <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">location_on</span>
-                    BUENOS AIRES · Envíos de lunes a sábado
+                    <span x-text="hero.etiqueta_ubicacion">BUENOS AIRES · Envíos de lunes a sábado</span>
                 </div>
 <h1 class="text-5xl md:text-7xl font-black text-on-surface tracking-tighter leading-[1.1]">
-                    Tu comida casera, <span class="text-primary">lista para disfrutar.</span>
+                    <span x-text="hero.titulo_regular">Tu comida casera, </span><span class="text-primary" x-text="hero.titulo_destacado">lista para disfrutar.</span>
 </h1>
-<p class="text-lg md:text-xl text-on-surface-variant max-w-lg leading-relaxed">
+<p class="text-lg md:text-xl text-on-surface-variant max-w-lg leading-relaxed" x-text="hero.descripcion">
                     Viandas gourmet equilibradas, cocinadas con ingredientes frescos y enviadas directo a tu puerta o oficina. Sin complicaciones, solo sabor real.
                 </p>
 <div class="flex flex-wrap gap-4 pt-4">
@@ -216,23 +216,23 @@
 </div>
 </div>
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-<!-- Card 1 -->
+<template x-for="plato in menu" :key="plato.titulo">
 <div class="bg-surface-container-lowest rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all group">
 <div class="relative h-64 overflow-hidden">
-<img alt="Bowl Saludable" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Ensalada bowl colorida con quinoa y vegetales" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzGhixaYgnLKcfQ3aVghhQQPIuH5wDv-Tl-OTdllmEkkyv8jS17E5JVT9lK2IKGGNf0_0IN7_g-AlsFAU280IT-8Rv7yHmJraT9-neY_RUzceTFukgs-VAsWtsxplSAmxgGQ9BWuzcKICznGazJ9Z6Ua2N6U7IgxQB4mjVf5US5UhYxQJDkpSF5ZkEPwDbVZtn-pAEHX1wpfGHDvcSzHk7RjeR5aoLnlAa2HNJ6acdhHc2-pnnxeWEaA1LV_cVIXFls6U3jYapfiOY"/>
-<span class="absolute top-4 left-4 bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Fitness</span>
+<img :alt="plato.titulo" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" :src="plato.imagen"/>
+<span class="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider" :class="plato.etiqueta_color" x-text="plato.etiqueta"></span>
 </div>
 <div class="p-8">
 <div class="flex gap-2 mb-4">
-<span class="text-[10px] font-bold bg-surface-container-high px-2 py-0.5 rounded text-on-surface-variant uppercase">420 kcal</span>
-<span class="text-[10px] font-bold bg-surface-container-high px-2 py-0.5 rounded text-on-surface-variant uppercase">32g Prot</span>
+<span class="text-[10px] font-bold bg-surface-container-high px-2 py-0.5 rounded text-on-surface-variant uppercase" x-text="plato.calorias"></span>
+<span class="text-[10px] font-bold bg-surface-container-high px-2 py-0.5 rounded text-on-surface-variant uppercase" x-text="plato.proteinas"></span>
 </div>
-<h3 class="text-2xl font-bold text-on-surface mb-2">Bowl de Pollo &amp; Quinoa</h3>
-<p class="text-on-surface-variant text-sm mb-6 leading-relaxed">Pechuga grillada, quinoa real, mix de verdes, palta y aderezo de cítricos.</p>
+<h3 class="text-2xl font-bold text-on-surface mb-2" x-text="plato.titulo"></h3>
+<p class="text-on-surface-variant text-sm mb-6 leading-relaxed" x-text="plato.descripcion"></p>
 <div class="flex items-center justify-between pt-6 border-t border-surface-variant">
 <div class="flex flex-col">
 <span class="text-xs text-on-secondary-fixed-variant">desde</span>
-<span class="text-2xl font-black text-on-surface">$5.200</span>
+<span class="text-2xl font-black text-on-surface" x-text="'$' + plato.precio"></span>
 </div>
 <button class="bg-[#25D366] text-white p-3 rounded-full hover:opacity-90 active:scale-95 transition-all shadow-md">
 <span class="material-symbols-outlined block">shopping_cart</span>
@@ -240,55 +240,7 @@
 </div>
 </div>
 </div>
-<!-- Card 2 -->
-<div class="bg-surface-container-lowest rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all group">
-<div class="relative h-64 overflow-hidden">
-<img alt="Pasta Pesto" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Pasta penne con salsa pesto y tomates cherry" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNcmjwv08onIyI5QfmgEgMsaavamE-SDdBeuyKJ5Od2xEOMeYMT1SPmuHejDiWJl3WwL3bKWjQ4BopHyUCFkcBxYATK_7EhngLpN9oIgg5dM2Um1PugEmroAv_MznIVmDqdBY3bv1yBPtHXkDw-aaQlr_NzIyEmJHEHEZUgR0D_sbX056YcaPbWY7q23YfTzPrT_kioHE9UQeiQ6Ai0b2_yoRoWtPK7xJafJgpn20yy7rZFDw5FqSFjMefwaHoGDnU9EmlPoyN2Qli"/>
-<span class="absolute top-4 left-4 bg-tertiary-container text-on-tertiary-container px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Veggie</span>
-</div>
-<div class="p-8">
-<div class="flex gap-2 mb-4">
-<span class="text-[10px] font-bold bg-surface-container-high px-2 py-0.5 rounded text-on-surface-variant uppercase">380 kcal</span>
-<span class="text-[10px] font-bold bg-surface-container-high px-2 py-0.5 rounded text-on-surface-variant uppercase">15g Prot</span>
-</div>
-<h3 class="text-2xl font-bold text-on-surface mb-2">Penne al Pesto de Albahaca</h3>
-<p class="text-on-surface-variant text-sm mb-6 leading-relaxed">Pasta integral con pesto casero, tomates cherry confitados y nueces tostadas.</p>
-<div class="flex items-center justify-between pt-6 border-t border-surface-variant">
-<div class="flex flex-col">
-<span class="text-xs text-on-secondary-fixed-variant">desde</span>
-<span class="text-2xl font-black text-on-surface">$4.800</span>
-</div>
-<button class="bg-[#25D366] text-white p-3 rounded-full hover:opacity-90 active:scale-95 transition-all shadow-md">
-<span class="material-symbols-outlined block">shopping_cart</span>
-</button>
-</div>
-</div>
-</div>
-<!-- Card 3 -->
-<div class="bg-surface-container-lowest rounded-3xl overflow-hidden shadow-sm hover:shadow-xl transition-all group">
-<div class="relative h-64 overflow-hidden">
-<img alt="Carne Braseada" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Carne de res braseada con puré de papas" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCLx9X8y7s2YDE3WLLYYW0fx4ZcSUL2kud4UDTkr0DjV4rfmvLvD1Qh_2V7UU4YsgqQVlxAI26LMeFf-ZHwis5bEQV94AFjEo3H6Est-0_1opgHYwNZ0RjpOqaT3LpGikql0GToxzm9OGB5zLy0RDjxWOrW_Cqm1xs4DJ5nXcZrf5EaXmnRs7ol8C9PAK_EJBiUXey0mcdoZkrfCH5ZMJVXFq-ZOfkUE_JFmvfI_SUy9LPBIimLxBaeqgCxwxWqSH0893tp-N5hpyKv"/>
-<span class="absolute top-4 left-4 bg-primary-container text-on-primary-container px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Clásicos</span>
-</div>
-<div class="p-8">
-<div class="flex gap-2 mb-4">
-<span class="text-[10px] font-bold bg-surface-container-high px-2 py-0.5 rounded text-on-surface-variant uppercase">550 kcal</span>
-<span class="text-[10px] font-bold bg-surface-container-high px-2 py-0.5 rounded text-on-surface-variant uppercase">40g Prot</span>
-</div>
-<h3 class="text-2xl font-bold text-on-surface mb-2">Carne Braseada 12hs</h3>
-<p class="text-on-surface-variant text-sm mb-6 leading-relaxed">Tierna carne de ternera al vino tinto con puré de calabaza y papas rústicas.</p>
-<div class="flex items-center justify-between pt-6 border-t border-surface-variant">
-<div class="flex flex-col">
-<span class="text-xs text-on-secondary-fixed-variant">desde</span>
-<span class="text-2xl font-black text-on-surface">$6.100</span>
-</div>
-<button class="bg-[#25D366] text-white p-3 rounded-full hover:opacity-90 active:scale-95 transition-all shadow-md">
-<span class="material-symbols-outlined block">shopping_cart</span>
-</button>
-</div>
-</div>
-</div>
-<!-- Repetir 3 más para completar 6 si es necesario o dejar así por diseño visual -->
+</template>
 </div>
 <div class="mt-16 text-center">
 <button class="inline-flex items-center gap-2 text-primary font-bold text-lg hover:underline decoration-2 underline-offset-8">
@@ -546,8 +498,62 @@
 <link rel="stylesheet" href="css/chat.css"/>
 
 <!-- Scripts -->
-
+<script>
+    function landingData() {
+        return {
+            hero: {
+                etiqueta_ubicacion: "BUENOS AIRES · Envíos de lunes a sábado",
+                titulo_regular: "Tu comida casera, ",
+                titulo_destacado: "lista para disfrutar.",
+                descripcion: "Viandas gourmet equilibradas, cocinadas con ingredientes frescos y enviadas directo a tu puerta o oficina. Sin complicaciones, solo sabor real."
+            },
+            menu: [
+                {
+                    etiqueta: "Fitness",
+                    etiqueta_color: "bg-tertiary-container text-on-tertiary-container",
+                    calorias: "420 kcal",
+                    proteinas: "32g Prot",
+                    titulo: "Bowl de Pollo & Quinoa",
+                    descripcion: "Pechuga grillada, quinoa real, mix de verdes, palta y aderezo de cítricos.",
+                    precio: "5.200",
+                    imagen: "https://lh3.googleusercontent.com/aida-public/AB6AXuAzGhixaYgnLKcfQ3aVghhQQPIuH5wDv-Tl-OTdllmEkkyv8jS17E5JVT9lK2IKGGNf0_0IN7_g-AlsFAU280IT-8Rv7yHmJraT9-neY_RUzceTFukgs-VAsWtsxplSAmxgGQ9BWuzcKICznGazJ9Z6Ua2N6U7IgxQB4mjVf5US5UhYxQJDkpSF5ZkEPwDbVZtn-pAEHX1wpfGHDvcSzHk7RjeR5aoLnlAa2HNJ6acdhHc2-pnnxeWEaA1LV_cVIXFls6U3jYapfiOY"
+                },
+                {
+                    etiqueta: "Veggie",
+                    etiqueta_color: "bg-tertiary-container text-on-tertiary-container",
+                    calorias: "380 kcal",
+                    proteinas: "15g Prot",
+                    titulo: "Penne al Pesto de Albahaca",
+                    descripcion: "Pasta integral con pesto casero, tomates cherry confitados y nueces tostadas.",
+                    precio: "4.800",
+                    imagen: "https://lh3.googleusercontent.com/aida-public/AB6AXuBNcmjwv08onIyI5QfmgEgMsaavamE-SDdBeuyKJ5Od2xEOMeYMT1SPmuHejDiWJl3WwL3bKWjQ4BopHyUCFkcBxYATK_7EhngLpN9oIgg5dM2Um1PugEmroAv_MznIVmDqdBY3bv1yBPtHXkDw-aaQlr_NzIyEmJHEHEZUgR0D_sbX056YcaPbWY7q23YfTzPrT_kioHE9UQeiQ6Ai0b2_yoRoWtPK7xJafJgpn20yy7rZFDw5FqSFjMefwaHoGDnU9EmlPoyN2Qli"
+                },
+                {
+                    etiqueta: "Clásicos",
+                    etiqueta_color: "bg-primary-container text-on-primary-container",
+                    calorias: "550 kcal",
+                    proteinas: "40g Prot",
+                    titulo: "Carne Braseada 12hs",
+                    descripcion: "Tierna carne de ternera al vino tinto con puré de calabaza y papas rústicas.",
+                    precio: "6.100",
+                    imagen: "https://lh3.googleusercontent.com/aida-public/AB6AXuCLx9X8y7s2YDE3WLLYYW0fx4ZcSUL2kud4UDTkr0DjV4rfmvLvD1Qh_2V7UU4YsgqQVlxAI26LMeFf-ZHwis5bEQV94AFjEo3H6Est-0_1opgHYwNZ0RjpOqaT3LpGikql0GToxzm9OGB5zLy0RDjxWOrW_Cqm1xs4DJ5nXcZrf5EaXmnRs7ol8C9PAK_EJBiUXey0mcdoZkrfCH5ZMJVXFq-ZOfkUE_JFmvfI_SUy9LPBIimLxBaeqgCxwxWqSH0893tp-N5hpyKv"
+                }
+            ],
+            async initData() {
+                try {
+                    const res = await fetch('data/landing.json');
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.hero) this.hero = data.hero;
+                        if (data.menu) this.menu = data.menu;
+                    }
+                } catch (e) {
+                    console.error("Error al cargar datos del JSON", e);
+                }
+            }
+        }
+    }
+</script>
 <script src="js/forms/contact.js"></script>
 <script src="js/chat/chat.js"></script>
 </body></html>
-
