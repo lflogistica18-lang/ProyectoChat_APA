@@ -1,0 +1,34 @@
+backend:
+  name: test-repo # Cambiar a 'github' para producción con autenticación
+  branch: main # Rama donde se guardarán los cambios
+
+media_folder: "Imagenes" # Carpeta donde se suben las imágenes
+public_folder: "Imagenes"
+
+collections:
+  - name: "landing"
+    label: "Landing Page"
+    files:
+      - label: "Contenido Principal"
+        name: "content"
+        file: "frontend/data/landing.json"
+        fields:
+          - { label: "Hero Section", name: "hero", widget: "object", fields: [
+              { label: "Etiqueta Ubicación", name: "etiqueta_ubicacion", widget: "string" },
+              { label: "Título Regular", name: "titulo_regular", widget: "string" },
+              { label: "Título Destacado", name: "titulo_destacado", widget: "string" },
+              { label: "Descripción", name: "descripcion", widget: "text" }
+            ]}
+          - { label: "Menú de Viandas", name: "menu", widget: "list", fields: [
+              { label: "Título del Plato", name: "titulo", widget: "string" },
+              { label: "Descripción", name: "descripcion", widget: "text" },
+              { label: "Precio", name: "precio", widget: "string" },
+              { label: "Imagen", name: "imagen", widget: "image" },
+              { label: "Categoría (Etiqueta)", name: "etiqueta", widget: "string" },
+              { label: "Color de Etiqueta", name: "etiqueta_color", widget: "select", options: [
+                  { label: "Naranja (Clásicos)", value: "bg-primary-container text-on-primary-container" },
+                  { label: "Verde (Veggie/Fitness)", value: "bg-tertiary-container text-on-tertiary-container" }
+                ]},
+              { label: "Calorías", name: "calorias", widget: "string" },
+              { label: "Proteínas", name: "proteinas", widget: "string" }
+            ]}

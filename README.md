@@ -17,8 +17,8 @@ ProyectoChat_APA/
 │
 ├── ── FRONTEND (CÓDIGO WEB) ───────────────────────────────────
 ├── /frontend                          ← Todo lo que se corre en el navegador
-│   ├── landing_apa_viandas.html       ← Página principal (Landing)
-│   ├── menu_apa_viandas.html          ← Vistas adicionales
+│   ├── /admin                         ← ✨ NUEVO: Panel de control visual (CMS)
+│   ├── /data                          ← ✨ NUEVO: Datos dinámicos (landing.json)
 │   ├── /assets                        ← Archivos estáticos
 │   │   ├── /images                    ← Fotografías e iconografía
 │   │   └── /fonts                     ← Tipografías
@@ -30,7 +30,9 @@ ProyectoChat_APA/
 │       ├── /forms                     ← ✨ NUEVO: Formularios interactivos
 │       └── /stories                   ← ✨ NUEVO: Componente de historias
 │
-├── ── AUTOMATIZACIONES Y BACKEND ──────────────────────────────
+│   └── landing_apa_viandas.html       ← Página principal (AHORA DINÁMICA)
+│   └── menu_apa_viandas.html          ← Vistas adicionales
+│├── ── AUTOMATIZACIONES Y BACKEND ──────────────────────────────
 ├── /workflows                         ← Flujos exportados de n8n o lógica backend
 │   ├── flujo_viandas_sin_telegram.json
 │   └── flujo_formulario_web.json      ← ✨ NUEVO: Flujo del formulario web
@@ -88,9 +90,10 @@ ProyectoChat_APA/
 | Nueva Estructura Modular | ✅ Lista | — |
 | Web Chat UI | ⏳ En desarrollo | Alta |
 | Formularios Interactivos | ✅ Listo | — |
+| Landing — Contenido dinámico (JSON) | ✅ Listo | — |
+| Panel Administrador (CMS) | ✅ Listo | — |
 | Subida de Historias Web | ⏳ Planificado | Alta |
 | Base de conocimiento (Sheets) | ⏳ Pendiente | Alta |
-| Landing — contenido e imágenes | ⏳ Pendiente | Media |
 | Dashboard Looker Studio | 📅 Futuro | Baja |
 
 ---

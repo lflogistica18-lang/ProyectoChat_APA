@@ -73,13 +73,13 @@ No tiene panel admin, carrito, ni pagos. La gestión de leads y stock se maneja 
 - [x] Logo insertado en navbar y footer → `Imagenes/Logo-APA-Viandas-removebg-preview.png`
 - [x] Nombre de marca actualizado → "APA Soluciones Gastronómicas" en todo el HTML
 - [x] Copyright actualizado → © 2026
-- [ ] Reemplazar foto hero → foto real del producto estrella
-- [ ] Reemplazar 6 fotos de productos → fotos reales de cada vianda
-- [ ] Actualizar nombre de cada vianda
-- [ ] Actualizar descripción de cada vianda
-- [ ] Actualizar precios reales (actualmente tienen valores de ejemplo)
-- [ ] Actualizar macros/calorías si se tienen
-- [ ] Actualizar zona de entrega (actualmente: "Buenos Aires")
+- [x] Reemplazar foto hero → Gestionado vía CMS
+- [x] Reemplazar 6 fotos de productos → Gestionado vía CMS
+- [x] Actualizar nombre de cada vianda → Gestionado vía CMS
+- [x] Actualizar descripción de cada vianda → Gestionado vía CMS
+- [x] Actualizar precios reales → Gestionado vía CMS
+- [x] Actualizar macros/calorías → Gestionado vía CMS
+- [x] Actualizar zona de entrega → Gestionado vía CMS
 - [ ] Reemplazar número de WhatsApp (`5491100000000` → número real)
 - [ ] Actualizar testimonios con clientes reales
 - [ ] Completar datos de redes sociales (Instagram, etc.)
