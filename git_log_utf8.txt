@@ -1,0 +1,47 @@
+﻿commit 1dbb9599fb92131c058a0a3b1e992e9fbbc2bf32
+Author: lflogistica18-lang <lf.logistica18@gmail.com>
+Date:   Tue Mar 24 22:36:25 2026 -0300
+
+    push
+
+diff --git a/admin/config.yml b/admin/config.yml
+new file mode 100644
+index 0000000..7fe1698
+--- /dev/null
++++ b/admin/config.yml
+@@ -0,0 +1,35 @@
++backend:
++  name: github
++  repo: lflogistica18-lang/ProyectoChat_APA
++  branch: main
++
++media_folder: "Imagenes" # Carpeta donde se suben las im├ígenes
++public_folder: "Imagenes"
++
++collections:
++  - name: "landing"
++    label: "Landing Page"
++    files:
++      - label: "Contenido Principal"
++        name: "content"
++        file: "data/landing.json"
++        fields:
++          - { label: "Hero Section", name: "hero", widget: "object", fields: [
++              { label: "Etiqueta Ubicaci├│n", name: "etiqueta_ubicacion", widget: "string" },
++              { label: "T├¡tulo Regular", name: "titulo_regular", widget: "string" },
++              { label: "T├¡tulo Destacado", name: "titulo_destacado", widget: "string" },
++              { label: "Descripci├│n", name: "descripcion", widget: "text" }
++            ]}
++          - { label: "Men├║ de Viandas", name: "menu", widget: "list", fields: [
++              { label: "T├¡tulo del Plato", name: "titulo", widget: "string" },
++              { label: "Descripci├│n", name: "descripcion", widget: "text" },
++              { label: "Precio", name: "precio", widget: "string" },
++              { label: "Imagen", name: "imagen", widget: "image" },
++              { label: "Categor├¡a (Etiqueta)", name: "etiqueta", widget: "string" },
++              { label: "Color de Etiqueta", name: "etiqueta_color", widget: "select", options: [
++                  { label: "Naranja (Cl├ísicos)", value: "bg-primary-container text-on-primary-container" },
++                  { label: "Verde (Veggie/Fitness)", value: "bg-tertiary-container text-on-tertiary-container" }
++                ]},
++              { label: "Calor├¡as", name: "calorias", widget: "string" },
++              { label: "Prote├¡nas", name: "proteinas", widget: "string" }
++            ]}
