@@ -3,7 +3,7 @@ backend:
   repo: lflogistica18-lang/ProyectoChat_APA
   branch: main
 
-media_folder: "Imagenes" # Carpeta donde se suben las imágenes
+media_folder: "Imagenes"
 public_folder: "Imagenes"
 
 collections:
@@ -15,21 +15,21 @@ collections:
         file: "data/landing.json"
         fields:
           - { label: "Hero Section", name: "hero", widget: "object", fields: [
-              { label: "Etiqueta Ubicación", name: "etiqueta_ubicacion", widget: "string" },
-              { label: "Título Regular", name: "titulo_regular", widget: "string" },
-              { label: "Título Destacado", name: "titulo_destacado", widget: "string" },
-              { label: "Descripción", name: "descripcion", widget: "text" }
+              { label: "Ubicacion", name: "etiqueta_ubicacion", widget: "string" },
+              { label: "Titulo Regular", name: "titulo_regular", widget: "string" },
+              { label: "Titulo Destacado", name: "titulo_destacado", widget: "string" },
+              { label: "Descripcion", name: "descripcion", widget: "text" }
             ]}
-          - { label: "Menú de Viandas", name: "menu", widget: "list", fields: [
-              { label: "Título del Plato", name: "titulo", widget: "string" },
-              { label: "Descripción", name: "descripcion", widget: "text" },
+          - { label: "Menu de Viandas", name: "menu", widget: "list", fields: [
+              { label: "Titulo del Plato", name: "titulo", widget: "string" },
+              { label: "Descripcion", name: "descripcion", widget: "text" },
               { label: "Precio", name: "precio", widget: "string" },
               { label: "Imagen", name: "imagen", widget: "image" },
-              { label: "Categoría (Etiqueta)", name: "etiqueta", widget: "string" },
+              { label: "Categoria", name: "etiqueta", widget: "string" },
               { label: "Color de Etiqueta", name: "etiqueta_color", widget: "select", options: [
-                  { label: "Naranja (Clásicos)", value: "bg-primary-container text-on-primary-container" },
-                  { label: "Verde (Veggie/Fitness)", value: "bg-tertiary-container text-on-tertiary-container" }
+                  { label: "Naranja", value: "bg-primary-container text-on-primary-container" },
+                  { label: "Verde", value: "bg-tertiary-container text-on-tertiary-container" }
                 ]},
-              { label: "Calorías", name: "calorias", widget: "string" },
-              { label: "Proteínas", name: "proteinas", widget: "string" }
+              { label: "Calorias", name: "calorias", widget: "string" },
+              { label: "Proteinas", name: "proteinas", widget: "string" }
             ]}
