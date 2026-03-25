@@ -3,7 +3,8 @@ backend:
   repo: lflogistica18-lang/ProyectoChat_APA
   branch: main
 
-local_backend: true # Permite editar localmente con npx netlify-cms-proxy-server
+local_backend:
+  url: "http://localhost:8081/api/v1"
 
 media_folder: "Imagenes"
 public_folder: "Imagenes"
