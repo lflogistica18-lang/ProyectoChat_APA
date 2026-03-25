@@ -1,6 +1,7 @@
 backend:
-  name: test-repo # Cambiar a 'github' para producción con autenticación
-  branch: main # Rama donde se guardarán los cambios
+  name: github
+  repo: lflogistica18-lang/ProyectoChat_APA
+  branch: main
 
 media_folder: "Imagenes" # Carpeta donde se suben las imágenes
 public_folder: "Imagenes"
