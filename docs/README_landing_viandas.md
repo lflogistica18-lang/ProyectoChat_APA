@@ -1,9 +1,9 @@
 # 🍱 Landing Page — APA Soluciones Gastronómicas
 
-> **Archivos HTML:** `landing_apa_viandas.html` (landing) · `menu_apa_viandas.html` (catálogo)
-> **Origen:** Generado con Firebase Studio (Stitch) — separado y adaptado manualmente
-> **Stack:** HTML + Tailwind CSS (CDN) — sin frameworks, sin build
-> **Estado actual:** Diseño generado ✅ | Logo insertado ✅ | Contenido real ⏳ | Funcionalidad ⏳ | Publicación ⏳
+> **Archivos HTML:** `index.html` (landing) · `menu.html` (catálogo)
+> **Origen:** Generado con Firebase Studio (Stitch)
+> **Stack:** HTML + Tailwind CSS (CDN) + Alpine.js + Decap CMS
+> **Estado actual:** Diseño ✅ | CMS ✅ | Reestructuración Raíz ✅
 > **Última actualización:** Marzo 2026
 
 ---
@@ -203,11 +203,13 @@ Sin medios de pago, el riesgo es bajo. Medidas mínimas:
 ### Estructura a subir a GitHub
 ```
 /
-├── landing_apa_viandas.html
-├── menu_apa_viandas.html
-└── Imagenes/
-    └── Logo-APA-Viandas-removebg-preview.png
-    └── (resto de fotos cuando estén listas)
+├── index.html
+├── menu.html
+├── admin/
+├── data/
+├── Imagenes/
+└── css/
+└── js/
 ```
 
 ---

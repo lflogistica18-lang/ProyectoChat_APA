@@ -13,37 +13,22 @@ Para evitar el "código espagueti" y mantener el proyecto escalable, todas las n
 ```text
 ProyectoChat_APA/
 │
-├── README.md                          ← Este archivo — índice general
+├── index.html                         ← ✨ NUEVO: Página principal (Entry point)
+├── menu.html                          ← ✨ NUEVO: Catálogo de viandas
+├── admin/                             ← Panel de control visual (CMS)
+├── data/                              ← Datos dinámicos (landing.json)
+├── Imagenes/                          ← Activos (Logo, fotos, etc)
+├── css/                               ← Estilos
+├── js/                                ← Lógica modularizada
 │
-├── ── FRONTEND (CÓDIGO WEB) ───────────────────────────────────
-├── /frontend                          ← Todo lo que se corre en el navegador
-│   ├── /admin                         ← ✨ NUEVO: Panel de control visual (CMS)
-│   ├── /data                          ← ✨ NUEVO: Datos dinámicos (landing.json)
-│   ├── /assets                        ← Archivos estáticos
-│   │   ├── /images                    ← Fotografías e iconografía
-│   │   └── /fonts                     ← Tipografías
-│   │
-│   ├── /css                           ← Estilos globales (Tailwind/Vainilla)
-│   │
-│   └── /js                            ← Toda la lógica de negocio modularizada
-│       ├── /chat                      ← Componentes y lógica del Web Chat
-│       ├── /forms                     ← ✨ NUEVO: Formularios interactivos
-│       └── /stories                   ← ✨ NUEVO: Componente de historias
-│
-│   └── landing_apa_viandas.html       ← Página principal (AHORA DINÁMICA)
-│   └── menu_apa_viandas.html          ← Vistas adicionales
-│├── ── AUTOMATIZACIONES Y BACKEND ──────────────────────────────
-├── /workflows                         ← Flujos exportados de n8n o lógica backend
+├── workflows/                         ← Flujos exportados de n8n
 │   ├── flujo_viandas_sin_telegram.json
-│   └── flujo_formulario_web.json      ← ✨ NUEVO: Flujo del formulario web
+│   └── flujo_formulario_web.json
 │
-└── ── DOCUMENTACIÓN ───────────────────────────────────────────
-├── /docs                              ← Arquitectura, datos y guías de desarrollo
-│   ├── README_chatbot_viandas.md
-│   ├── README_landing_viandas.md
-│   ├── estrategia_datos_chatbot.md
-│   ├── n8n-automatizacion.md
-│   └── GUIA_DATOS_CLIENTE.md
+└── docs/                              ← Documentación técnica
+    ├── README_chatbot_viandas.md
+    ├── README_landing_viandas.md
+    └── ...
 ```
 
 ### 💡 Reglas de Oro para Nuevos Archivos
@@ -54,8 +39,8 @@ ProyectoChat_APA/
 2. **Reutilizar Componentes**:
    Si el chat y el formulario utilizan los mismos botones y tarjetas visuales, el CSS debe ir en `frontend/css/` o en clases utilitarias compartidas, no hardcodeado en cada HTML.
 
-3. **No ensuciar la raíz del proyecto**:
-   La raíz del proyecto (la carpeta principal) está reservada **exclusivamente** para configuraciones (ej: `package.json`, `.env`, `README.md`). Ningún archivo `.js`, `.html` o `.css` nuevo debe ir a la raíz.
+3. **Limpio y accesible**:
+   La raíz del proyecto contiene el `index.html` para que GitHub Pages o cualquier servidor web lo detecte automáticamente sin redirecciones.
 
 ---
 
