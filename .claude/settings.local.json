@@ -2,7 +2,15 @@
   "permissions": {
     "allow": [
       "Read(///wsl.localhost/Ubuntu/home/lucas/PROYECTOS/**)",
-      "Bash(python3 -:*)"
+      "Bash(python3 -:*)",
+      "Bash(tree -L 2 -a //wsl.localhost/Ubuntu/home/lucas/PROYECTOS/ProyectoChat_APA/)",
+      "Bash(git config:*)",
+      "WebSearch",
+      "WebFetch(domain:www.netlify.com)",
+      "WebFetch(domain:dylanbochman.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:montagnenoirewebstudio.com)",
+      "WebFetch(domain:answers.netlify.com)"
     ]
   }
 }

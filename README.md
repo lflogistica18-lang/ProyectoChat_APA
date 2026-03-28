@@ -15,52 +15,74 @@ El sitio es estático pero carga sus datos dinámicamente desde archivos JSON:
 
 ---
 
-## 🛠️ Panel Administrativo (CMS Local)
+## 🛠️ Levantar el CMS + Sitio Local (Paso a Paso)
 
-Para editar el contenido sin complicaciones de autenticación (GitHub OAuth), utilizamos el modo **Local Backend**. Sigue estos pasos para gestionar las viandas desde tu PC:
+### Paso 1 — Abrir la primera terminal en Ubuntu
 
-### 1. Levantar el "Motor" (Proxy de Archivos)
-Abre una terminal en la carpeta del proyecto y ejecuta:
 ```bash
+cd /home/lucas/PROYECTOS/ProyectoChat_APA
 npx netlify-cms-proxy-server
 ```
-*(Debe decir: configured with /home/lucas/PROYECTOS/ProyectoChat_APA y listening on port 8081)*
 
-### 2. Levantar el Servidor Web
-Abre una **segunda terminal** en la misma carpeta y ejecuta:
+✅ Debe mostrar: `"Netlify CMS Proxy Server listening on port 8081"`
+
+### Paso 2 — Abrir una SEGUNDA terminal en Ubuntu
+
 ```bash
+cd /home/lucas/PROYECTOS/ProyectoChat_APA
 npx serve .
 ```
-*(Esto te dará una URL local, por ejemplo: http://localhost:41237)*
 
-### 3. Acceder al Panel
-Entra en tu navegador a:
-👉 **http://localhost:XXXX/admin/** (reemplaza XXXX por el puerto que te dio el comando `serve`)
+✅ **IMPORTANTE:** Prestá atención al puerto que te muestra (ej: `http://localhost:39017`). **No siempre es el 3000.**
 
-Podrás editar platos, precios y fotos. Al darle a **"Save"**, los cambios se guardarán directamente en tu archivo `data/landing.json`.
+### Paso 3 — Abrir el Panel de Administración
 
----
+En el navegador ir a:
 
-## 🌐 Despliegue a Producción (GitHub / Hostinger)
+```
+http://localhost:XXXX/admin/#local_backend=true
+```
 
-Dado que estamos en modo local, los cambios que hagas en el panel **no se suben solos a Internet**. Para que se vean en tu web en vivo, debes hacer el proceso de Git:
+> ⚠️ Reemplazá `XXXX` por el puerto exacto que te dio el Paso 2. 
+> El `#local_backend=true` al final es **obligatorio**.
 
-1. **Guardar cambios en Git**:
-   ```bash
-   git add .
-   git commit -m "Actualización de menú vía CMS"
-   ```
-2. **Subir a la nube**:
-   ```bash
-   git push origin main
-   ```
+### Paso 4 — Editar y ver los cambios
+
+1. Editá lo que quieras en el panel y dale a **"Save"**.
+2. Volvé a la pestaña de la landing (ej: `http://localhost:39017`).
+3. Presioná **Ctrl + Shift + R** (esto limpia el caché y fuerza a la web a leer el nuevo JSON).
 
 ---
 
-## 🤖 Integraciones y Automatización (n8n)
-Los formularios y el chatbot están conectados a los webhooks de producción:
-- **Lead Form:** `https://n8n-prod-lucas.duckdns.org/webhook/lead-web`
-- **Chat Widget:** `https://n8n-prod-lucas.duckdns.org/webhook/whatsapp-viandas`
+## 🧐 Solución de Problemas (Si no ves los cambios)
+
+* **¿Estoy en el puerto correcto?** Si `npx serve` dice `39017` pero estás mirando `localhost:3000`, vas a ver una versión vieja o nada en absoluto.
+* **¿Guardaste en el CMS?** Asegurate de que el botón cambie a "Saved" (Guardado).
+* **¿Caché del navegador?** El navegador es "vago" y a veces no actualiza el archivo JSON. Usar **Ctrl + Shift + R** es la solución definitiva.
+* **¿Reiniciaste los servidores?** Si hiciste cambios estructurales, a veces conviene cerrar las terminales (Ctrl+C) y volver a levantarlas.
+
+---
+
+## 🌐 Despliegue a Producción
+
+Para que tus cambios locales se vean en la web real:
+
+```bash
+git add .
+git commit -m "Actualización vía CMS"
+git push origin main
+```
+
+---
+
+## 📌 Comandos Rápidos
+
+| Acción | Comando |
+|---|---|
+| Entrar a la carpeta | `cd /home/lucas/PROYECTOS/ProyectoChat_APA` |
+| Motor del CMS | `npx netlify-cms-proxy-server` |
+| Servidor Web | `npx serve .` |
+| Forzar actualización | `Ctrl + Shift + R` |
 
 ---
 

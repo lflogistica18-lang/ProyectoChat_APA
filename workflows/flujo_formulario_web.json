@@ -107,12 +107,12 @@
       "name": "📌 Manejo de Errores",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
-      "position": [200, 700],
+      "position": [150, 680],
       "parameters": {
         "color": 2,
-        "content": "## 🚨 Captura de Errores\nEste trigger se activa automáticamente cuando un nodo falla en el flujo.",
-        "height": 250,
-        "width": 400
+        "content": "## 🚨 Captura de Errores — Formulario Web\nCuando un nodo falla en este flujo:\n1️⃣ Se captura el error con el Error Trigger\n2️⃣ Se formatean los datos del error\n3️⃣ Se envía alerta por **Gmail**\n4️⃣ Se registra en **Google Sheets** para auditoría",
+        "height": 320,
+        "width": 900
       }
     },
     {
@@ -120,8 +120,55 @@
       "name": "🚨 Catch Errores",
       "type": "n8n-nodes-base.errorTrigger",
       "typeVersion": 1,
-      "position": [250, 750],
+      "position": [200, 800],
       "parameters": {}
+    },
+    {
+      "id": "format-error-form",
+      "name": "⚙️ Formatear Error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [440, 800],
+      "parameters": {
+        "jsCode": "const errorData = $input.first().json;\n\nconst execution = errorData.execution || {};\nconst error = execution.error || {};\nconst lastNode = execution.lastNodeExecuted || 'Desconocido';\nconst workflowName = execution.workflowData?.name || 'APA Flujo Formulario Web';\nconst workflowId = execution.workflowData?.id || 'N/A';\nconst executionId = execution.id || 'N/A';\nconst errorMessage = error.message || 'Sin mensaje de error';\nconst errorDescription = error.description || '';\nconst errorStack = error.stack || '';\nconst timestamp = new Date().toLocaleString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires' });\n\nreturn [{\n  json: {\n    workflow_name: workflowName,\n    workflow_id: workflowId,\n    execution_id: executionId,\n    nodo_fallido: lastNode,\n    error_mensaje: errorMessage,\n    error_descripcion: errorDescription,\n    error_stack: errorStack.substring(0, 500),\n    timestamp: timestamp,\n    severidad: 'ERROR'\n  }\n}];"
+      }
+    },
+    {
+      "id": "error-gmail-form",
+      "name": "🚨 Alerta Error Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [700, 720],
+      "parameters": {
+        "sendTo": "lf.logistica.18@gmail.com",
+        "subject": "=🚨 ERROR en {{ $json.workflow_name }} — Nodo: {{ $json.nodo_fallido }}",
+        "message": "=<div style=\"font-family: Arial, sans-serif; max-width: 620px; margin: 0 auto;\">\n  <div style=\"background: #d32f2f; padding: 20px; border-radius: 8px 8px 0 0;\">\n    <h2 style=\"color: white; margin: 0;\">🚨 ERROR EN FLUJO DE AUTOMATIZACIÓN</h2>\n  </div>\n  <div style=\"background: #fff; padding: 24px; border: 1px solid #e0e0e0;\">\n    <table style=\"width: 100%; border-collapse: collapse;\">\n      <tr style=\"background: #ffebee;\">\n        <td style=\"padding: 10px; font-weight: bold; width: 35%; border-bottom: 1px solid #eee;\">📋 Flujo</td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee;\">{{ $json.workflow_name }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; font-weight: bold; border-bottom: 1px solid #eee;\">🆔 ID Ejecución</td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee;\">{{ $json.execution_id }}</td>\n      </tr>\n      <tr style=\"background: #ffebee;\">\n        <td style=\"padding: 10px; font-weight: bold; border-bottom: 1px solid #eee;\">❌ Nodo Fallido</td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee; color: #d32f2f; font-weight: bold;\">{{ $json.nodo_fallido }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; font-weight: bold; border-bottom: 1px solid #eee;\">💬 Mensaje Error</td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee;\">{{ $json.error_mensaje }}</td>\n      </tr>\n      <tr style=\"background: #ffebee;\">\n        <td style=\"padding: 10px; font-weight: bold; border-bottom: 1px solid #eee;\">📝 Descripción</td>\n        <td style=\"padding: 10px; border-bottom: 1px solid #eee;\">{{ $json.error_descripcion || 'N/A' }}</td>\n      </tr>\n      <tr>\n        <td style=\"padding: 10px; font-weight: bold;\">🕐 Fecha/Hora</td>\n        <td style=\"padding: 10px;\">{{ $json.timestamp }}</td>\n      </tr>\n    </table>\n    <div style=\"margin-top: 16px; padding: 12px; background: #f5f5f5; border-radius: 4px; font-size: 12px; font-family: monospace; word-break: break-all;\">\n      <strong>Stack Trace (parcial):</strong><br>{{ $json.error_stack || 'No disponible' }}\n    </div>\n  </div>\n  <div style=\"background: #424242; padding: 12px; text-align: center; border-radius: 0 0 8px 8px;\">\n    <span style=\"color: #bbb; font-size: 12px;\">Alerta automática — APA Automatizaciones</span>\n  </div>\n</div>",
+        "appendAttribution": false
+      }
+    },
+    {
+      "id": "error-sheets-form",
+      "name": "📊 Log Error Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [700, 900],
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Log Errores",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {}
+        }
+      }
     }
   ],
   "connections": {
@@ -164,6 +211,33 @@
         [
           {
             "node": "📧 Mail Interno B2C",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "🚨 Catch Errores": {
+      "main": [
+        [
+          {
+            "node": "⚙️ Formatear Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "⚙️ Formatear Error": {
+      "main": [
+        [
+          {
+            "node": "🚨 Alerta Error Gmail",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "📊 Log Error Sheets",
             "type": "main",
             "index": 0
           }
