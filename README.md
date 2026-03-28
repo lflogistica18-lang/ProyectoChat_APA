@@ -1,89 +1,112 @@
-# 🍱 ProyectoChat APA — Gastro Viandas
+# ProyectoChat APA — Gastro Viandas
 
-Este proyecto consiste en una landing page dinámica para un servicio de viandas gastronómicas, gestionable mediante un panel administrativo (CMS) y automatizada con n8n.
+Landing page dinámica para un servicio de viandas gastronómicas, gestionable mediante un panel CMS y automatizada con n8n.
 
 ---
 
-## 🏗️ Guía de Arquitectura (Raíz)
+## Arquitectura
 
 El sitio es estático pero carga sus datos dinámicamente desde archivos JSON:
+
 - **`index.html`**: Landing principal (Hero, Servicios, Contacto).
 - **`menu.html`**: Catálogo de viandas.
 - **`data/landing.json`**: Fuente de verdad para todos los textos, precios e imágenes.
-- **`admin/`**: Panel de control interactivo (Decap CMS).
-- **`Imagenes/`**: Carpeta centralizada para activos (Logo, fotos, etc).
+- **`admin/`**: Panel de control (Decap CMS).
+- **`Imagenes/`**: Carpeta centralizada para imágenes.
 
 ---
 
-## 🛠️ Levantar el CMS + Sitio Local (Paso a Paso)
+## CMS en Producción (Netlify)
 
-### Paso 1 — Abrir la primera terminal en Ubuntu
+El CMS está hosteado en Netlify con autenticación via Netlify Identity + Git Gateway.
 
+**URL del panel:** `https://tranquil-bunny-818c7d.netlify.app/admin/`
+
+### Flujo automático
+```
+Guardás en el CMS → commit automático en GitHub → deploy en Netlify (1-2 min)
+```
+No se necesita tocar ninguna terminal.
+
+### Agregar un nuevo usuario
+1. Ir a Netlify → Project configuration → Identity → Invite users
+2. El usuario recibe un mail y crea su contraseña
+3. Listo, puede entrar al panel
+
+---
+
+## CMS en Local (Desarrollo)
+
+### Paso 1 — Terminal 1: Motor del CMS
 ```bash
 cd /home/lucas/PROYECTOS/ProyectoChat_APA
 npx netlify-cms-proxy-server
 ```
+Debe mostrar: `Netlify CMS Proxy Server listening on port 8081`
 
-✅ Debe mostrar: `"Netlify CMS Proxy Server listening on port 8081"`
+### Paso 2 — Terminal 2: Servidor web
+```bash
+cd /home/lucas/PROYECTOS/ProyectoChat_APA
+npx http-server . --cors
+```
+Fijarse el puerto que muestra (por defecto 8080).
 
-### Paso 2 — Abrir una SEGUNDA terminal en Ubuntu
+### Paso 3 — Abrir el panel
+```
+http://localhost:8080/admin/#local_backend=true
+```
+El `#local_backend=true` al final es obligatorio.
+
+### Paso 4 — Ver los cambios en la landing
+Después de guardar en el CMS, presionar **Ctrl + Shift + R** en la landing para limpiar caché.
+
+> En local los cambios NO se suben solos a GitHub. Hay que commitear manualmente (ver abajo).
+
+---
+
+## Guia de Imagenes
+
+| Concepto | Valor |
+|---|---|
+| Proporcion | 4:3 horizontal |
+| Tamaño recomendado | 800 x 600 px |
+| Peso maximo | 200 KB |
+| Formato | JPEG o WebP |
+| Compresion JPEG | 75-80% |
+
+Herramienta: **squoosh.app** — subis la foto, formato MozJPEG al 78%, resize a 800 de ancho, descargás.
+
+---
+
+## Solución de Problemas
+
+- **No veo los cambios en producción:** Esperá 1-2 minutos y recargá. Netlify hace el deploy automático.
+- **No veo los cambios en local:** Usá Ctrl + Shift + R para limpiar caché del navegador.
+- **Error de puerto:** Si `npx http-server` muestra un puerto distinto al 8080, usá ese en la URL.
+- **La imagen no aparece:** Verificá que el archivo esté subido a GitHub (en local hay que commitear manualmente).
+
+---
+
+## Subir cambios locales a GitHub
 
 ```bash
 cd /home/lucas/PROYECTOS/ProyectoChat_APA
-npx serve .
-```
-
-✅ **IMPORTANTE:** Prestá atención al puerto que te muestra (ej: `http://localhost:39017`). **No siempre es el 3000.**
-
-### Paso 3 — Abrir el Panel de Administración
-
-En el navegador ir a:
-
-```
-http://localhost:XXXX/admin/#local_backend=true
-```
-
-> ⚠️ Reemplazá `XXXX` por el puerto exacto que te dio el Paso 2. 
-> El `#local_backend=true` al final es **obligatorio**.
-
-### Paso 4 — Editar y ver los cambios
-
-1. Editá lo que quieras en el panel y dale a **"Save"**.
-2. Volvé a la pestaña de la landing (ej: `http://localhost:39017`).
-3. Presioná **Ctrl + Shift + R** (esto limpia el caché y fuerza a la web a leer el nuevo JSON).
-
----
-
-## 🧐 Solución de Problemas (Si no ves los cambios)
-
-* **¿Estoy en el puerto correcto?** Si `npx serve` dice `39017` pero estás mirando `localhost:3000`, vas a ver una versión vieja o nada en absoluto.
-* **¿Guardaste en el CMS?** Asegurate de que el botón cambie a "Saved" (Guardado).
-* **¿Caché del navegador?** El navegador es "vago" y a veces no actualiza el archivo JSON. Usar **Ctrl + Shift + R** es la solución definitiva.
-* **¿Reiniciaste los servidores?** Si hiciste cambios estructurales, a veces conviene cerrar las terminales (Ctrl+C) y volver a levantarlas.
-
----
-
-## 🌐 Despliegue a Producción
-
-Para que tus cambios locales se vean en la web real:
-
-```bash
 git add .
-git commit -m "Actualización vía CMS"
+git commit -m "descripcion del cambio"
 git push origin main
 ```
 
 ---
 
-## 📌 Comandos Rápidos
+## Comandos Rapidos
 
-| Acción | Comando |
+| Accion | Comando |
 |---|---|
 | Entrar a la carpeta | `cd /home/lucas/PROYECTOS/ProyectoChat_APA` |
-| Motor del CMS | `npx netlify-cms-proxy-server` |
-| Servidor Web | `npx serve .` |
-| Forzar actualización | `Ctrl + Shift + R` |
+| Motor del CMS (local) | `npx netlify-cms-proxy-server` |
+| Servidor web (local) | `npx http-server . --cors` |
+| Forzar actualizacion | `Ctrl + Shift + R` |
 
 ---
 
-*Desarrollado con ❤️ para Gastro APA — Marzo 2026*
+*Desarrollado para Gastro APA — Marzo 2026*
