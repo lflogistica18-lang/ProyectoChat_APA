@@ -1,6 +1,6 @@
 {
   "hero": {
-    "etiqueta_ubicacion": "BUENOS AIRES · Envíos de lunes a sábado",
+    "etiqueta_ubicacion": "BUENOS AIRES · Envíos de Martes a Jueves",
     "titulo_regular": "Tu comida casera",
     "titulo_destacado": "Hecha con amor",
     "descripcion": "Viandas "
@@ -31,10 +31,10 @@
       "etiqueta_color": "bg-tertiary-container text-on-tertiary-container",
       "calorias": "420 kcal",
       "proteinas": "32g Prot",
-      "titulo": "Bowl de Pollo & Quinoa",
+      "titulo": "Arrollado Primavera",
       "descripcion": "Pechuga grillada, quinoa real, mix de verdes, palta y aderezo de cítricos.",
       "precio": "5.200",
-      "imagen": "https://lh3.googleusercontent.com/aida-public/AB6AXuAzGhixaYgnLKcfQ3aVghhQQPIuH5wDv-Tl-OTdllmEkkyv8jS17E5JVT9lK2IKGGNf0_0IN7_g-AlsFAU280IT-8Rv7yHmJraT9-neY_RUzceTFukgs-VAsWtsxplSAmxgGQ9BWuzcKICznGazJ9Z6Ua2N6U7IgxQB4mjVf5US5UhYxQJDkpSF5ZkEPwDbVZtn-pAEHX1wpfGHDvcSzHk7RjeR5aoLnlAa2HNJ6acdhHc2-pnnxeWEaA1LV_cVIXFls6U3jYapfiOY"
+      "imagen": "Imagenes/whatsapp-image-2026-03-19-at-9.21.39-am-1-.jpeg"
     },
     {
       "etiqueta": "Veggie",
