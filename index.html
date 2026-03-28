@@ -6,6 +6,18 @@
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title>APA Soluciones Gastronómicas | Comida Real para tu día a día</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+<script>
+  if (window.netlifyIdentity) {
+    window.netlifyIdentity.on("init", user => {
+      if (!user) {
+        window.netlifyIdentity.on("login", () => {
+          document.location.href = "/admin/";
+        });
+      }
+    });
+  }
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
@@ -541,7 +553,7 @@
             ],
             async initData() {
                 try {
-                    const res = await fetch('data/landing.json');
+                    const res = await fetch('data/landing.json?v=' + Date.now());
                     if (res.ok) {
                         const data = await res.json();
                         if (data.hero) this.hero = data.hero;
