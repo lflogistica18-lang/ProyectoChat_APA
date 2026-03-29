@@ -1,9 +1,9 @@
 {
   "hero": {
-    "etiqueta_ubicacion": "BUENOS AIRES · Envíos de lunes a sábado",
-    "titulo_regular": "Estos pibas no se ponen las pilas ",
-    "titulo_destacado": ", habría que avisar a lucas",
-    "descripcion": "Viandas"
+    "etiqueta_ubicacion": "asi se ve ",
+    "titulo_regular": "asi se ve ",
+    "titulo_destacado": "asi se ve ",
+    "descripcion": "ASI SE VE"
   },
   "como_funciona": [
     {
@@ -31,8 +31,8 @@
       "etiqueta_color": "bg-tertiary-container text-on-tertiary-container",
       "calorias": "420 kcal",
       "proteinas": "32g Prot",
-      "titulo": "Arrollado Cesar / Primavera",
-      "descripcion": "Anda saber que le ponen a esto esta gente. Pero esta rico ",
+      "titulo": "Nombre del producto ",
+      "descripcion": "Descripcion del producto",
       "precio": "5.200",
       "imagen": "Imagenes/whatsapp-image-2026-03-19-at-9.21.40-am-2-.jpg"
     },
@@ -41,8 +41,8 @@
       "etiqueta_color": "bg-tertiary-container text-on-tertiary-container",
       "calorias": "380 kcal",
       "proteinas": "15g Prot",
-      "titulo": "Penne al Pesto a lo lucas aparicio",
-      "descripcion": "Pene como dice el nombre que se come lucas aparicio",
+      "titulo": "Nombre del producto ",
+      "descripcion": "Descripcion del producto",
       "precio": "4.800",
       "imagen": "https://lh3.googleusercontent.com/aida-public/AB6AXuBNcmjwv08onIyI5QfmgEgMsaavamE-SDdBeuyKJ5Od2xEOMeYMT1SPmuHejDiWJl3WwL3bKWjQ4BopHyUCFkcBxYATK_7EhngLpN9oIgg5dM2Um1PugEmroAv_MznIVmDqdBY3bv1yBPtHXkDw-aaQlr_NzIyEmJHEHEZUgR0D_sbX056YcaPbWY7q23YfTzPrT_kioHE9UQeiQ6Ai0b2_yoRoWtPK7xJafJgpn20yy7rZFDw5FqSFjMefwaHoGDnU9EmlPoyN2Qli"
     },
